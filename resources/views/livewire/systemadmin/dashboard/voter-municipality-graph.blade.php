@@ -17,7 +17,7 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     const options = {
-        colors: ['#4052d6'], // Use generated random colors for each bar
+        colors: ['#3a8e47', '#b72f3b', '#11a5d9', '#fe803a', '#d97b53'], // Use generated random colors for each bar
         series: [{
             name: "Active Voter",
             data: <?php echo json_encode($votercounts) ?>,

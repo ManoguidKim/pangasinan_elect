@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('barangay_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('precinct_no', 100)->nullable();
             $table->string('gender', 100)->nullable();
-            $table->date('dob')->nullable();
+            $table->string('dob', 100)->nullable();
             $table->string('status', 100)->default('Active');
             $table->string('remarks', 100)->nullable()->default('');
             $table->text('image_path')->nullable();

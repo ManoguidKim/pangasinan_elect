@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Systemadmin\Dashboard;
 
+use App\Models\District;
 use App\Models\Municipality;
 use App\Models\Voter;
 use Livewire\Component;
 
 class VoterFactionMunicipalityGraph extends Component
 {
+    public $districts = [];
+
     public function render()
     {
 
@@ -30,13 +33,19 @@ class VoterFactionMunicipalityGraph extends Component
         $undecidedcounts = $voterPerMunicipality->pluck('undecided_counts')->toArray();
 
 
+        // Districts
+        $districts = District::all();
+
+
         return view(
             'livewire.systemadmin.dashboard.voter-faction-municipality-graph',
             [
                 'municipalities' => $municipalities,
                 'allycounts' => $allycounts,
                 'opponentcounts' => $opponentcounts,
-                'undecidedcounts' => $undecidedcounts
+                'undecidedcounts' => $undecidedcounts,
+
+                'districts' => $districts
             ]
         );
     }

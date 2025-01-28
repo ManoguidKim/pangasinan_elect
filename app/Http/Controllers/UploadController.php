@@ -6,11 +6,13 @@ use App\Http\Requests\FileUploadRequest;
 use App\Models\Barangay;
 use App\Models\Voter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use League\Csv\Reader;
 
 class UploadController extends Controller
 {
@@ -76,5 +78,77 @@ class UploadController extends Controller
         }
 
         return redirect()->route('system-admin-upload-voters')->with('message', 'File Uploaded Successfully');
+    }
+
+    public function importCsv()
+    {
+        set_time_limit(600);  // Allow the script to run for up to 10 minutes
+
+        $path = storage_path('app/public/voter.csv');
+
+        // Check if the file exists
+        if (!file_exists($path)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        // Read the CSV file
+        $csv = Reader::createFromPath($path, 'r');
+        $csv->setHeaderOffset(0); // Set the header offset for CSV parsing
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        try {
+            foreach ($csv as $row) {
+                // Ensure all required keys exist
+                if (!isset(
+                    $row['firstname'],
+                    $row['middlename'],
+                    $row['lastname'],
+                    $row['barangay'],
+                    $row['precinct'],
+                    $row['gender'],
+                )) {
+                    continue; // Skip the row if any required column is missing
+                }
+
+                // Find the barangay by name
+                $barangay = Barangay::where('name', $row['barangay'])->first();
+
+                // If no barangay is found, set it to null or handle the error
+                $barangayId = $barangay ? $barangay->id : null;
+
+
+                $remarks = $row['side'];
+                if ($remarks == "UndToAlly" || $remarks == "OppoToAlly") {
+                    $remarks = "Ally";
+                }
+
+                // Create a new Voter record
+                Voter::create([
+                    'fname' => $row['firstname'],
+                    'mname' => $row['middlename'],
+                    'lname' => $row['lastname'],
+                    'suffix' => $row['suffix'],
+                    'barangay_id' => $barangayId,  // Handle missing barangay gracefully
+                    'precinct_no' => $row['precinct'],
+                    'gender' => $row['gender'],
+                    'dob' => $row['dateofbirth'],
+                    'status' => 'Active',
+                    'remarks' => $remarks,
+                    'image_path' => '',
+                ]);
+            }
+
+            // Commit transaction if everything is successful
+            DB::commit();
+
+            return response()->json(['success' => 'CSV data imported successfully']);
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            DB::rollBack();
+
+            return response()->json(['error' => 'Failed to import CSV data', 'message' => $e->getMessage()], 500);
+        }
     }
 }

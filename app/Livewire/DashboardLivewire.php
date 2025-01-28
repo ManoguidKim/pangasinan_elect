@@ -29,12 +29,13 @@ class DashboardLivewire extends Component
 
         // Age Bracket
         $voterAgeBracket = Voter::select(
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 18 AND 34 THEN 1 ELSE 0 END) as young_adult'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 35 AND 49 THEN 1 ELSE 0 END) as middle_age_adult'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) BETWEEN 50 AND 64 THEN 1 ELSE 0 END) as older_age'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, dob, CURDATE()) >= 65 THEN 1 ELSE 0 END) as senior')
+            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(dob, "%m/%d/%Y"), CURDATE()) BETWEEN 18 AND 34 THEN 1 ELSE 0 END) as young_adult'),
+            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(dob, "%m/%d/%Y"), CURDATE()) BETWEEN 35 AND 49 THEN 1 ELSE 0 END) as middle_age_adult'),
+            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(dob, "%m/%d/%Y"), CURDATE()) BETWEEN 50 AND 64 THEN 1 ELSE 0 END) as older_age'),
+            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(dob, "%m/%d/%Y"), CURDATE()) >= 65 THEN 1 ELSE 0 END) as senior')
         )
             ->where('municipality_id', auth()->user()->municipality_id)
+            ->where('dob', '!=', '')
             ->first();
 
         // Faction

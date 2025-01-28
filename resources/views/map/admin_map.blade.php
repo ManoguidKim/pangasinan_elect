@@ -55,9 +55,9 @@
             ];
 
             geocoder = new google.maps.Geocoder();
-            var latlng = new google.maps.LatLng(16.50000000, 120.41667000);
+            var latlng = new google.maps.LatLng(15.8949, 120.2863);
             var mapOptions = {
-                zoom: 12,
+                zoom: 11,
                 center: latlng,
                 scrollwheel: false,
                 disableDoubleClickZoom: true,
@@ -77,7 +77,7 @@
 
         function goecodeMuncipalities(props) {
             geocoder.geocode({
-                address: props.municipality_name + ", La Union, Philippines"
+                address: props.municipality_name + ", Pangasinan, Philippines"
             }, function(results, status) {
 
                 if (status == "OK") {

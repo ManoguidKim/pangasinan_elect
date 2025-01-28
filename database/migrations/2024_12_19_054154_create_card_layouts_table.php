@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('card_layouts', function (Blueprint $table) {
             $table->id();
             $table->string('image_path', 500);
+            $table->foreignId('municipality_id')->constrained();
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@
             data: chartData,
         }],
         chart: {
-            height: 900,
+            height: 500,
             type: 'bar'
         },
         plotOptions: {

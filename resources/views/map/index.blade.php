@@ -20,7 +20,7 @@
         </ol>
     </nav>
 
-    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Map La Union Province</h3>
+    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Map Pangasinan Province</h3>
     <div class="p-4 mb-3 rounded-lg bg-green-50 dark:bg-gray-800 border border-dashed">
         <p class="text-sm text-gray-500 dark:text-gray-400">This interactive map showcases the locations of all barangays, marked for easy identification. Clicking on a marker reveals comprehensive data about the selected barangay, including the total number of voters, the percentage of allies, opponents, and undecided individuals.</p>
     </div>
@@ -41,7 +41,7 @@
             var municipality = <?php echo json_encode($municipality); ?>;
 
             // Concatenate the municipality with the rest of the address
-            curAddress = municipality + ", La Union, Philippines";
+            curAddress = municipality + ", Pangasinan, Philippines";
 
             // Geocode the address
             geocoder.geocode({

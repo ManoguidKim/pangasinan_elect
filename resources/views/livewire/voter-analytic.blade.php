@@ -45,6 +45,10 @@
             <thead class="text-xs text-gray-700 uppercase bg-blue-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
+                        #
+                    </th>
+
+                    <th scope="col" class="px-6 py-3">
                         Barangay Name
                     </th>
 
@@ -78,6 +82,9 @@
                 @foreach ($voterfactions as $voter)
                 @if ($voter->opponent_percentage > $voter->ally_percentage)
                 <tr class="bg-red-100 border-b dark:bg-gray-800 dark:border-gray-700 uppercase">
+                    <td class="px-6 py-4">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white italic">
                         {{ $voter->name }}
                     </td>
@@ -109,6 +116,9 @@
                 @else
 
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 uppercase">
+                    <td class="px-6 py-4">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white italic">
                         {{ $voter->name }}
                     </td>
@@ -171,6 +181,10 @@
             <thead class="text-xs text-gray-700 uppercase bg-blue-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
+                        #
+                    </th>
+
+                    <th scope="col" class="px-6 py-3">
                         Municipality / City Name
                     </th>
 
@@ -204,6 +218,9 @@
                 @foreach ($voterfactions as $voter)
                 @if ($voter->opponent_percentage > ($voter->total_voters * 0.15))
                 <tr class="bg-red-100 border-b dark:bg-gray-800 dark:border-gray-700 uppercase">
+                    <td class="px-6 py-4">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white italic">
                         {{ $voter->name }}
                     </td>
@@ -231,6 +248,9 @@
                 </tr>
                 @else
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 uppercase">
+                    <td class="px-6 py-4">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white italic">
                         {{ $voter->name }}
                     </td>

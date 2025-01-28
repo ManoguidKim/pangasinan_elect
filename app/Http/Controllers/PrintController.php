@@ -31,7 +31,7 @@ class PrintController extends Controller
         $type                   = $request->input('type');
         $sub_type               = $request->input('sub_type');
 
-        $cardLayout             = CardLayout::first()->image_path;
+        $cardLayout             = CardLayout::where('municipality_id', auth()->user()->municipality_id)->first()->image_path;
 
         if ($type == "Active Voter of Organization") {
 

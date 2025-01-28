@@ -14,7 +14,7 @@ class CardLayoutController extends Controller
      */
     public function index()
     {
-        $cards = CardLayout::all();
+        $cards = CardLayout::where('municipality_id', auth()->user()->municipality_id)->get();
         return view(
             'card.index',
             [
@@ -39,7 +39,7 @@ class CardLayoutController extends Controller
         if ($request->hasFile('cardFile') && $request->file('cardFile')->isValid()) {
 
             // Check if there's an existing card design and delete it
-            $existingCard = CardLayout::first(); // Assuming only one card design can exist at a time
+            $existingCard = CardLayout::where('municipality_id', auth()->user()->municipality_id)->first(); // Assuming only one card design can exist at a time
             if ($existingCard) {
                 // Delete the old file from storage
                 Storage::disk('public')->delete($existingCard->image_path);
@@ -56,7 +56,8 @@ class CardLayoutController extends Controller
 
             // Insert data into the database
             $cardFile = CardLayout::create([
-                'image_path' => $path
+                'image_path' => $path,
+                'municipality_id' => auth()->user()->municipality_id
             ]);
 
             // Redirect or return a response

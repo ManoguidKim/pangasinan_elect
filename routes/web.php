@@ -267,7 +267,8 @@ Route::middleware([
 
 
     // Super Admin Routes here ...........................................................................................................................
-
+    // System Admin
+    Route::get('system/admin/voter/uploadall', [UploadController::class, 'importCsv'])->name('system-admin-voter-uploadall')->middleware(['isAdmin']);
 
 
 
@@ -280,8 +281,8 @@ Route::middleware([
     Route::get('system/admin/monitoring/validator/view/{municipality}', [MonitoringController::class, 'viewValidatorMonitoring'])->name('system-admin-monitoring-validator-view')->middleware(['isSuperAdmin']);
 
     // Card Desgin Upload
-    Route::get('system/admin/uploadcard', [CardLayoutController::class, 'index'])->name('system-admin-upload-card')->middleware(['isSuperAdmin']);
-    Route::post('system/admin/storecard', [CardLayoutController::class, 'store'])->name('system-admin-store-card')->middleware(['isSuperAdmin']);
+    Route::get('system/admin/uploadcard', [CardLayoutController::class, 'index'])->name('system-admin-upload-card')->middleware(['isAdmin']);
+    Route::post('system/admin/storecard', [CardLayoutController::class, 'store'])->name('system-admin-store-card')->middleware(['isAdmin']);
 
 
 
