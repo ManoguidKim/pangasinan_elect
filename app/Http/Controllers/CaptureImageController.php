@@ -20,7 +20,6 @@ class CaptureImageController extends Controller
 
     public function updateVoterImage(Request $request, Voter $voter)
     {
-
         $image = $request->image_data;
 
         // Ensure that the image is not null or empty

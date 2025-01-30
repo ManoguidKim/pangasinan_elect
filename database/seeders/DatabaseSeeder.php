@@ -304,6 +304,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Baloling', 'municipality_id' => 4],
             ['name' => 'Coral', 'municipality_id' => 4],
             ['name' => 'Golden', 'municipality_id' => 4],
+            ['name' => 'Jimenez', 'municipality_id' => 4],
             ['name' => 'Lambayan', 'municipality_id' => 4],
             ['name' => 'Luyan', 'municipality_id' => 4],
             ['name' => 'Nilombot', 'municipality_id' => 4],

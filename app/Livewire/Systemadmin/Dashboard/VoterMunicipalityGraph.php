@@ -15,18 +15,16 @@ class VoterMunicipalityGraph extends Component
                 COALESCE(SUM(CASE WHEN voters.status = 'Active' THEN 1 ELSE 0 END), 0) as active_voter
             ")
             ->leftJoin('voters', 'municipalities.id', '=', 'voters.municipality_id')
-            ->groupBy('municipalities.name')
+            ->groupBy('municipalities.id', 'municipalities.name') // Added municipalities.id to ensure proper grouping
             ->orderBy('municipalities.name')
             ->get();
 
-        $municipalities = $voterPerMunicipality->pluck('name');
-        $voterCounts = $voterPerMunicipality->pluck('active_voter');
-
+        // No need to do pluck since we can directly pass data as needed
         return view(
             'livewire.systemadmin.dashboard.voter-municipality-graph',
             [
-                'municipalities' => $municipalities,
-                'votercounts' => $voterCounts
+                'municipalities' => $voterPerMunicipality->pluck('name'),
+                'votercounts' => $voterPerMunicipality->pluck('active_voter')
             ]
         );
     }

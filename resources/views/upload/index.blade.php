@@ -38,7 +38,7 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">Please upload an Excel file (.xlsx or .xls) containing your data. Make sure the file is formatted correctly to ensure accurate processing. If your file includes multiple sheets, we will process the active sheet by default. The maximum file size allowed is 1024 MB, and we only accept Excel files (other formats will not be processed).</p>
     </div>
 
-    <form action="{{ route('system-admin-uploadfiles') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('system-admin-uploadotherfiles') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input name="excelFile" class="block w-1/2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" wire:model="excelFile">
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">.xlsx, .xls (max. 1024 mb).
