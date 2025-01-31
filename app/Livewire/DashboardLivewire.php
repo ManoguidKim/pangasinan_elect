@@ -19,8 +19,7 @@ class DashboardLivewire extends Component
         // Gender
         $voterGenderBracket = Voter::selectRaw("
             SUM(CASE WHEN gender = 'male' THEN 1 ELSE 0 END) as male_count,
-            SUM(CASE WHEN gender = 'female' THEN 1 ELSE 0 END) as female_count,
-            SUM(CASE WHEN gender != 'female' AND gender != 'male' THEN 1 ELSE 0 END) as other_gender_count
+            SUM(CASE WHEN gender = 'female' THEN 1 ELSE 0 END) as female_count
         ")
             ->where('municipality_id', auth()->user()->municipality_id)
             ->first();
