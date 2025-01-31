@@ -123,6 +123,9 @@ class UploadController extends Controller
                 if ($remarks == "UndToAlly" || $remarks == "OppoToAlly") {
                     $remarks = "Ally";
                 }
+                if ($remarks == "") {
+                    $remarks = "Undecided";
+                }
 
                 // Create a new Voter record
                 Voter::create([
@@ -130,7 +133,8 @@ class UploadController extends Controller
                     'mname' => $row['middlename'],
                     'lname' => $row['lastname'],
                     'suffix' => $row['suffix'],
-                    'barangay_id' => $barangayId,  // Handle missing barangay gracefully
+                    'barangay_id' => $barangayId,
+                    'municipality_id' => auth()->user()->municipality_id,
                     'precinct_no' => $row['precinct'],
                     'gender' => $row['gender'],
                     'dob' => $row['dateofbirth'],

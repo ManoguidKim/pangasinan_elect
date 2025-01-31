@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -56,23 +58,33 @@ class Voter extends Model
     ];
 
 
-    protected $encrypt = ['fname', 'mname', 'lname', 'dob', 'gender'];
+    protected $encrypt = ['fname', 'mname', 'lname', 'dob'];
 
+    // Mutator for encrypting attributes before saving
     public function setAttribute($key, $value)
     {
-        if (in_array($key, $this->encrypt)) {
-            $this->attributes[$key] = encrypt($value);
-        } else {
-            parent::setAttribute($key, $value);
+        if (in_array($key, $this->encrypt) && !is_null($value)) {
+            $value = Crypt::encryptString($value);
         }
+
+        parent::setAttribute($key, $value);
     }
 
+    // Accessor for decrypting attributes when retrieving
     public function getAttribute($key)
     {
-        if (in_array($key, $this->encrypt) && !empty($this->attributes[$key])) {
-            return decrypt($this->attributes[$key]);
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->encrypt) && !empty($value)) {
+            try {
+                return Crypt::decryptString($value);
+            } catch (Exception $e) {
+                // Handle potential decryption failures
+                report($e);
+                return null; // Return null instead of crashing
+            }
         }
 
-        return parent::getAttribute($key);
+        return $value;
     }
 }

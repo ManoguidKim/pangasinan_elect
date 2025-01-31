@@ -211,6 +211,7 @@ Route::middleware([
     // Upload
     Route::get('system/admin/uploadfiles', [UploadController::class, 'index'])->name('system-admin-upload-voters')->middleware(['isAdminEncoder']);
     Route::post('system/admin/uploadfiles', [UploadController::class, 'upload'])->name('system-admin-uploadfiles')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/importCsv', [UploadController::class, 'importCsv'])->name('system-admin-importCsv')->middleware(['isAdmin']);
     Route::post('system/admin/uploadotherfiles', [UploadController::class, 'uploadOtherFile'])->name('system-admin-uploadotherfiles')->middleware(['isAdmin']);
 
 

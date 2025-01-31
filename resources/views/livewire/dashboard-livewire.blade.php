@@ -90,7 +90,11 @@
                     <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">{{ number_format($activeVoter) }}</h5>
                     <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Barangay active voters graph</p>
                 </div>
+
             </div>
+            <a href="{{ route('system-admin-barangay-voter-analytics') }}" class="inline-flex items-center text-gray-500 bg-blue-200 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                View Analytic Report
+            </a>
         </div>
         <div id="column-chart"></div>
     </div>
@@ -133,46 +137,6 @@
                 </div>
 
                 <div class="py-6" id="pie-chart-gender"></div>
-            </div>
-        </div>
-
-        <div class="w-full">
-            <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-
-                <div class="flex justify-between mb-3">
-                    <div class="flex justify-center items-center">
-                        <h5 class="text-xl font-bold leading-none text-gray-500 dark:text-white pe-1">Age distribution of active voters</h5>
-
-                    </div>
-                    <div>
-                        <div class="flex justify-end items-center">
-                            <button id="widgetDropdownButton2" data-dropdown-toggle="widgetDropdown2" data-dropdown-placement="bottom" type="button" class="inline-flex items-center justify-center text-gray-500 w-8 h-8 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm"><svg class="w-3.5 h-3.5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                                </svg><span class="sr-only">Open dropdown</span>
-                            </button>
-                            <div id="widgetDropdown2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="widgetDropdownButton2">
-                                    <li>
-                                        <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><svg class="w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
-                                            </svg>View
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><svg class="w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
-                                                <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
-                                            </svg>Download data
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="py-6" id="donut-chart-age"></div>
             </div>
         </div>
 
@@ -232,56 +196,64 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    // Function to generate a random color in hexadecimal format
-    function getRandomColor() {
-        return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-    }
-
-    // Generate random colors for each bar based on the number of voters (or dataset length)
-    const randomColors = <?php echo json_encode($votercounts_datasets); ?>.map(() => getRandomColor());
+    const allyData = <?php echo json_encode($allyVoterCounts); ?>;
+    const opponentData = <?php echo json_encode($opponentVoterCounts); ?>;
+    const undecidedData = <?php echo json_encode($undecidedVoterCounts); ?>;
+    const totalData = <?php echo json_encode($totalVoterCounts); ?>;
+    const barangays = <?php echo json_encode($barangays); ?>;
 
     const options = {
-        colors: randomColors, // Use generated random colors for each bar
+        colors: ["#5981b9", "#e36b3b", "#878a8e"],
         series: [{
-            name: "Active Voter",
-            data: <?php echo json_encode($votercounts_datasets) ?>,
-        }],
-        labels: <?php echo json_encode($barangays_datasets) ?>,
+                name: "Ally",
+                data: allyData
+            },
+            {
+                name: "Opponent",
+                data: opponentData
+            },
+            {
+                name: "Undecided",
+                data: undecidedData
+            }
+        ],
+        labels: barangays,
         chart: {
             type: "bar",
-            height: "360px",
+            height: "420",
+            stacked: true,
             fontFamily: "Inter, sans-serif",
             toolbar: {
-                show: false,
-            },
+                show: false
+            }
         },
         plotOptions: {
             bar: {
                 horizontal: false,
                 columnWidth: "70%",
                 borderRadiusApplication: "end",
-                borderRadius: 8,
-            },
+                borderRadius: 0
+            }
         },
         tooltip: {
             shared: true,
             intersect: false,
             style: {
-                fontFamily: "Inter, sans-serif",
-            },
+                fontFamily: "Inter, sans-serif"
+            }
         },
         states: {
             hover: {
                 filter: {
                     type: "darken",
-                    value: 1,
-                },
-            },
+                    value: 1
+                }
+            }
         },
         stroke: {
             show: true,
             width: 0,
-            colors: ["transparent"],
+            colors: ["transparent"]
         },
         grid: {
             show: true,
@@ -290,43 +262,42 @@
                 left: 2,
                 right: 2,
                 top: -14
-            },
+            }
         },
         dataLabels: {
-            enabled: false,
+            enabled: false
         },
         legend: {
-            show: false,
+            show: true
         },
         xaxis: {
-            categories: <?php echo json_encode($barangays_datasets) ?>,
+            categories: barangays,
             floating: false,
             labels: {
                 show: true,
                 style: {
-                    fontFamily: "Inter, sans-serif",
-                    cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
+                    fontFamily: "Inter, sans-serif"
                 }
             },
             axisBorder: {
-                show: false,
+                show: false
             },
             axisTicks: {
-                show: false,
-            },
+                show: false
+            }
         },
         yaxis: {
-            show: true, // Optionally show the y-axis
+            show: true
         },
         fill: {
-            opacity: 1,
-        },
+            opacity: 1
+        }
     };
 
-    if (document.getElementById("column-chart") && typeof ApexCharts !== 'undefined') {
+    document.addEventListener("DOMContentLoaded", function() {
         const chart = new ApexCharts(document.getElementById("column-chart"), options);
         chart.render();
-    }
+    });
 
 
 
@@ -486,99 +457,5 @@
     if (document.getElementById("pie-chart-gender") && typeof ApexCharts !== 'undefined') {
         const chartGender = new ApexCharts(document.getElementById("pie-chart-gender"), getChartOptionsGender());
         chartGender.render();
-    }
-
-
-
-
-
-    // Age Bracket Graph
-    const getChartOptionsAge = () => {
-        return {
-            series: [<?php echo $voterAgeBracket->young_adult ?>, <?php echo $voterAgeBracket->middle_age_adult ?>, <?php echo $voterAgeBracket->older_age ?>, <?php echo $voterAgeBracket->senior ?>],
-            colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
-            chart: {
-                height: 350,
-                width: "100%",
-                type: "donut",
-            },
-            stroke: {
-                colors: ["transparent"],
-                lineCap: "",
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        labels: {
-                            show: true,
-                            name: {
-                                show: true,
-                                fontFamily: "Inter, sans-serif",
-                                offsetY: 20,
-                            },
-                            total: {
-                                showAlways: true,
-                                show: true,
-                                label: "Voter(s)",
-                                fontFamily: "Inter, sans-serif",
-                                formatter: function(w) {
-                                    const sum = w.globals.seriesTotals.reduce((a, b) => {
-                                        return a + b
-                                    }, 0)
-                                    return sum.toLocaleString('en-US');
-                                },
-                            },
-                            value: {
-                                show: true,
-                                fontFamily: "Inter, sans-serif",
-                                offsetY: -20,
-                                formatter: function(value) {
-                                    return value.toLocaleString('en-US');
-                                },
-                            },
-                        },
-                        size: "80%",
-                    },
-                },
-            },
-            grid: {
-                padding: {
-                    top: -2,
-                },
-            },
-            labels: ["Young Adult", "Middle Age Adult", "Older Age", "Senior"],
-            dataLabels: {
-                enabled: false,
-            },
-            legend: {
-                position: "bottom",
-                fontFamily: "Inter, sans-serif",
-            },
-            yaxis: {
-                labels: {
-                    formatter: function(value) {
-                        return value.toLocaleString('en-US');
-                    },
-                },
-            },
-            xaxis: {
-                labels: {
-                    formatter: function(value) {
-                        return value.toLocaleString('en-US');
-                    },
-                },
-                axisTicks: {
-                    show: false,
-                },
-                axisBorder: {
-                    show: false,
-                },
-            },
-        }
-    }
-
-    if (document.getElementById("donut-chart-age") && typeof ApexCharts !== 'undefined') {
-        const chart = new ApexCharts(document.getElementById("donut-chart-age"), getChartOptionsAge());
-        chart.render();
     }
 </script>
