@@ -33,7 +33,8 @@
     @endif
 
     <div class="p-4 mb-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-        <p class="text-sm text-gray-500 dark:text-gray-400">A voter list is an official register of individuals eligible to vote in an election. It includes personal details such as names, addresses, and sometimes other identifiers, ensuring that only qualified voters participate in the election process. The list is maintained by electoral authorities, updated regularly to reflect changes like voter registration, relocations, or deaths. It is crucial for ensuring the integrity and transparency of elections by verifying that each vote is cast by a legitimate voter.</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            The list of voters displayed below consists exclusively of individuals registered in the barangay that has been specifically assigned to you. This ensures that you are only viewing and managing voters within your designated area.</p>
     </div>
 
     <div class="relative overflow-x-auto sm:rounded-lg p-1">
@@ -72,27 +73,40 @@
                             <div class="mt-3 sm:mt-0 sm:ml-3">
                                 <div class="text-base font-bold">{{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname }}</div>
                                 <div class="font-bold text-gray-400">{{ 'Gender : ' . $voter->gender . ' - Date of birth : ' . date('F d, Y', strtotime($voter->dob)) }}</div>
-                                <div class="font-bold text-red-400">{{ 'Address : ' . $voter->name }}, Bayambang, Pangasinan</div>
 
-                                <br>
+
 
                                 @if($voter->remarks == "Ally")
-                                <div class="font-bold text-lg text-green-400">{{ 'Remarks : ' . $voter->remarks }}</div>
+                                <div class="font-bold text-green-400">{{ 'Marked as : ' . $voter->remarks }}</div>
                                 @endif
 
                                 @if($voter->remarks == "Opponent")
-                                <div class="font-bold text-lg text-red-400">{{ 'Remarks : ' . $voter->remarks }}</div>
+                                <div class="font-bold text-red-400">{{ 'Marked as : ' . $voter->remarks }}</div>
                                 @endif
 
                                 @if($voter->remarks == "Undecided")
-                                <div class="font-bold text-lg text-gray-400">{{ 'Remarks : ' . $voter->remarks }}</div>
+                                <div class="font-bold text-gray-400">{{ 'Marked as : ' . $voter->remarks }}</div>
                                 @endif
+
+                                <div class="font-bold text-gray-400">{{ $voter->status }}</div>
 
                                 <br>
 
-                                <a href="{{ route('system-admin-validator-edit', $voter->id) }}" class="inline-flex w-full items-center justify-center text-gray-500 bg-white border border-green-500 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:confirm="Are you sure you want to edit {{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname }} information?">
-                                    Edit Voter Details
-                                </a>
+                                <div class="flex flex-col sm:flex-row gap-4 p-4">
+                                    <!-- Responsive Button: Full width on small screens, auto width on medium+ screens -->
+                                    <a href="{{ route('system-admin-validator-edit', $voter->id) }}"
+                                        class="w-full md:w-auto inline-flex items-center justify-center text-gray-500 bg-green-200 border border-green-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                                        wire:confirm="Are you sure you want to edit {{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname }} information?">
+                                        Edit Voter Details
+                                    </a>
+
+                                    <a href="{{ route('system-admin-validator-voter-assign-organization', $voter->id) }}"
+                                        class="w-full md:w-auto inline-flex items-center justify-center text-gray-500 bg-yellow-200 border border-yellow-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                                        wire:confirm="Are you sure you want to edit {{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname }} information?">
+                                        Assign Organization
+                                    </a>
+                                </div>
+
                             </div>
                         </th>
                         @endcan

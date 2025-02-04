@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Barangay;
+use App\Models\Log;
 use App\Models\Scanlog;
 use App\Models\Voter;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ class DashboardLivewire extends Component
         $activeVoter = Voter::where(['status' => 'Active', 'municipality_id' => auth()->user()->municipality_id])->count();
         $voterTaggedAlly = Voter::where(['status' => 'Active', 'remarks' => 'Ally', 'municipality_id' => auth()->user()->municipality_id])->count();
 
+
         // Gender
         $voterGenderBracket = Voter::selectRaw("
             SUM(CASE WHEN gender = 'male' THEN 1 ELSE 0 END) as male_count,
@@ -23,6 +25,7 @@ class DashboardLivewire extends Component
         ")
             ->where('municipality_id', auth()->user()->municipality_id)
             ->first();
+
 
         // Faction
         $voterFactionBracket = Voter::selectRaw("
@@ -33,8 +36,6 @@ class DashboardLivewire extends Component
             ->where('municipality_id', auth()->user()->municipality_id)
             ->where('status', 'Active')
             ->first();
-
-
 
 
         // Active Voter Per Barangay
@@ -59,10 +60,6 @@ class DashboardLivewire extends Component
         $totalVoterCounts = $voterPerBarangay->pluck('total_voter')->toArray();
 
 
-
-
-
-
         // Count Scanned QR 
         $scannedVoter = Voter::selectRaw("
         COUNT(voters.id) as total_voters,
@@ -70,6 +67,17 @@ class DashboardLivewire extends Component
         FORMAT((SUM(CASE WHEN scanlogs.id IS NOT NULL THEN 1 ELSE 0 END) / COUNT(voters.id)) * 100, 1) as scan_percentage
     ")
             ->leftJoin('scanlogs', 'scanlogs.voter_id', '=', 'voters.id')
+            ->where('voters.municipality_id', auth()->user()->municipality_id)
+            ->first();
+
+
+        // Update Percentage
+        $updates = Voter::selectRaw("
+        COUNT(voters.id) as total_voters,
+        SUM(CASE WHEN activity_log.id IS NOT NULL AND activity_log.description = 'updated' THEN 1 ELSE 0 END) as total_updates,
+        FORMAT((SUM(CASE WHEN activity_log.id IS NOT NULL AND activity_log.description = 'updated' THEN 1 ELSE 0 END) / COUNT(voters.id)) * 100, 5) as update_percentage
+    ")
+            ->leftJoin('activity_log', 'activity_log.subject_id', '=', 'voters.id')
             ->where('voters.municipality_id', auth()->user()->municipality_id)
             ->first();
 
@@ -89,7 +97,8 @@ class DashboardLivewire extends Component
                     'undecidedVoterCounts' => $undecidedVoterCounts,
                     'totalVoterCounts' => $totalVoterCounts,
 
-                    'scannedVoter' => $scannedVoter
+                    'scannedVoter' => $scannedVoter,
+                    'updates' => $updates
                 ]
             );
     }

@@ -201,18 +201,17 @@ Route::middleware([
     Route::post('system/admin/dynamic-subtype', [DynamicController::class, 'getSubType'])->name('system-admin-dynamic-subtype')->middleware(['isAdminEncoder']);
 
     Route::get('system/admin/voters/create', [VoterController::class, 'create'])->name('system-admin-voters-create')->middleware(['isAdminEncoder']);
-
     Route::post('system/admin/voters/create-add', [VoterController::class, 'store'])->name('system-admin-voters-create-add')->middleware(['isAdminEncoder']);
-
     Route::get('system/admin/voters/edit/{voter}', [VoterController::class, 'edit'])->name('system-admin-voters-edit')->middleware(['isAdminEncoder']);
-
     Route::post('system/admin/voters/update/{voter}', [VoterController::class, 'update'])->name('system-admin-voters-update')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/validator/voters/assign_organization/{voter}', [VoterController::class, 'validatorAssignOrganization'])->name('system-admin-validator-voter-assign-organization')->middleware(['isAdminValidator']);
+    Route::post('system/admin/validator/voters/assign_organization/save/{voter}', [VoterController::class, 'validatorSaveAssignOrganization'])->name('system-admin-validator-voter-assign-organization-save')->middleware(['isAdminValidator']);
 
     // Upload
     Route::get('system/admin/uploadfiles', [UploadController::class, 'index'])->name('system-admin-upload-voters')->middleware(['isAdminEncoder']);
     Route::post('system/admin/uploadfiles', [UploadController::class, 'upload'])->name('system-admin-uploadfiles')->middleware(['isAdminEncoder']);
     Route::get('system/admin/importCsv', [UploadController::class, 'importCsv'])->name('system-admin-importCsv')->middleware(['isAdmin']);
-    Route::post('system/admin/uploadotherfiles', [UploadController::class, 'uploadOtherFile'])->name('system-admin-uploadotherfiles')->middleware(['isAdmin']);
+    Route::get('system/admin/uploadotherfiles', [UploadController::class, 'importMunicipalityCsv'])->name('system-admin-uploadotherfiles')->middleware(['isAdmin']);
 
 
     // Download

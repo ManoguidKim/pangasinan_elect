@@ -28,7 +28,8 @@
 
     <form action="{{ route('system-admin-account-change-password') }}" method="post">
         @csrf
-        <div class="grid grid-cols-3 gap-4 mb-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-2">
+
             <div class="w-full">
 
 
@@ -45,12 +46,6 @@
                 @error('password_confirmation')
                 <span class="text-red-400">{{ $message }}</span>
                 @enderror
-            </div>
-
-            <div class="fw-full">
-            </div>
-
-            <div class="fw-full">
             </div>
         </div>
 

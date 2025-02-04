@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Livewire\powergrid\VoterTable;
+use App\Models\User;
 use App\Models\Voter;
 use App\Models\VoterOrganization;
 use App\Policies\UserPolicy;
@@ -9,6 +11,7 @@ use App\Policies\VoterOrganizationPolicy;
 use App\Policies\VoterPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {

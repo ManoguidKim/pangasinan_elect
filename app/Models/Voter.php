@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\EncryptedCast;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,33 +59,9 @@ class Voter extends Model
     ];
 
 
-    protected $encrypt = ['fname', 'mname', 'lname', 'dob'];
-
-    // Mutator for encrypting attributes before saving
-    public function setAttribute($key, $value)
-    {
-        if (in_array($key, $this->encrypt) && !is_null($value)) {
-            $value = Crypt::encryptString($value);
-        }
-
-        parent::setAttribute($key, $value);
-    }
-
-    // Accessor for decrypting attributes when retrieving
-    public function getAttribute($key)
-    {
-        $value = parent::getAttribute($key);
-
-        if (in_array($key, $this->encrypt) && !empty($value)) {
-            try {
-                return Crypt::decryptString($value);
-            } catch (Exception $e) {
-                // Handle potential decryption failures
-                report($e);
-                return null; // Return null instead of crashing
-            }
-        }
-
-        return $value;
-    }
+    protected $casts = [
+        'fname' => EncryptedCast::class,
+        'lname' => EncryptedCast::class,
+        'mname' => EncryptedCast::class
+    ];
 }

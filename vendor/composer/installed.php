@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b1ce1cadb5f30f1c48c1582f39c135778851b59d',
+        'reference' => 'abea4e4ccf82e7c27867699e874b71410c0f3e11',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -451,7 +451,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b1ce1cadb5f30f1c48c1582f39c135778851b59d',
+            'reference' => 'abea4e4ccf82e7c27867699e874b71410c0f3e11',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -813,6 +813,15 @@
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'power-components/livewire-powergrid' => array(
+            'pretty_version' => 'v6.1.11',
+            'version' => '6.1.11.0',
+            'reference' => '2b3b5d66fe5e40b0a62f0fc318beb617d0328406',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../power-components/livewire-powergrid',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'pragmarx/google2fa' => array(
             'pretty_version' => 'v8.0.3',

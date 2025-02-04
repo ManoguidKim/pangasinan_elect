@@ -470,7 +470,7 @@
 
     const getValidatorUpdateOption = () => {
         return {
-            series: [67],
+            series: [<?php echo $updates->update_percentage ?>],
             chart: {
                 height: 350,
                 type: 'radialBar',

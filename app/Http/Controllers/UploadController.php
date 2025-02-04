@@ -233,11 +233,11 @@ class UploadController extends Controller
     }
 
 
-    public function importMalasiquiCsv()
+    public function importMunicipalityCsv()
     {
-        set_time_limit(600);  // Allow the script to run for up to 10 minutes
+        set_time_limit(900);
 
-        $path = storage_path('app/public/votermalasiqui.csv');
+        $path = storage_path('app/public/voterstabarbara.csv');
 
         // Check if the file exists
         if (!file_exists($path)) {

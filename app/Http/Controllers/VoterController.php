@@ -6,7 +6,9 @@ use App\Http\Requests\AddVoterRequest;
 use App\Http\Requests\UpdateVoterRequest;
 use App\Http\Requests\validator\UpdateValidatorRequest;
 use App\Models\Barangay;
+use App\Models\Organization;
 use App\Models\Voter;
+use App\Models\VoterOrganization;
 use Illuminate\Http\Request;
 
 class VoterController extends Controller
@@ -76,7 +78,7 @@ class VoterController extends Controller
         $voterDetails = Voter::where('id', $voter->id)->first();
         $voterBarangayDetails = Barangay::where('id', $voterDetails->barangay_id)->first();
 
-        $barangays = Barangay::all();
+        $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
 
         return view(
             'voter.edit',
@@ -146,5 +148,45 @@ class VoterController extends Controller
         );
 
         return redirect()->route('system-validator-barangay-voter-list')->with('message', 'Voter updated successfully!');
+    }
+
+    public function validatorAssignOrganization(Voter $voter)
+    {
+        $organizations = Organization::where('municipality_id', auth()->user()->municipality_id)->get();
+        $tvoterOrganizations = VoterOrganization::select(
+            'organizations.name',
+            'voter_organizations.voter_id',
+            'voter_organizations.id',
+            'voter_organizations.organization_id'
+        )
+            ->join('organizations', 'voter_organizations.organization_id', '=', 'organizations.id')
+            ->where(
+                [
+                    'voter_organizations.voter_id' => $voter->id
+                ]
+            )
+            ->get();
+
+        return view(
+            'validator.assign_organization',
+            [
+                'voter' => $voter,
+                'organizations' => $organizations,
+                'voterOrganizations' => $tvoterOrganizations
+            ]
+        );
+    }
+
+    public function validatorSaveAssignOrganization(Request $request, Voter $voter)
+    {
+
+        VoterOrganization::create(
+            [
+                'voter_id' => $voter->id,
+                'organization_id' => $request->organization
+            ]
+        );
+
+        return redirect()->route('system-admin-validator-voter-assign-organization', $voter->id)->with('message', 'Organization successfully assigned to voter!');
     }
 }
