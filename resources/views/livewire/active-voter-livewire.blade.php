@@ -91,6 +91,7 @@
                             <div class="text-base font-semibold">{{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname }}</div>
                             <div class="font-normal text-gray-500">{{ 'Gender : ' . $voter->gender . ' - Date of birth : . ' . date('F d, Y', strtotime($voter->dob)) }}</div>
                             <div class="font-normal text-red-400">{{ 'Address : ' . $voter->name }}</div>
+                            <div class="font-normal text-blue-400">{{ 'Status : ' . $voter->status }}</div>
                         </div>
                     </th>
 

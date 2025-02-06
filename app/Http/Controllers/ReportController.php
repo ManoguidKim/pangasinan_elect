@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barangay;
+use App\Models\Municipality;
 use App\Models\Voter;
 use FPDF;
 use Illuminate\Http\Request;
@@ -220,5 +221,140 @@ class ReportController extends Controller
                     break;
             }
         }
+    }
+
+
+
+
+
+
+    // Super Admin
+
+    public function municipalTotalVoter()
+    {
+        $voterFactions = Municipality::select('municipalities.name')
+
+            // Get the count of allies, opponents, and undecided voters
+            ->selectRaw('COUNT(voters.id) as total_voters')
+            ->selectRaw('SUM(voters.remarks = "ally") as ally_count')
+            ->selectRaw('SUM(voters.remarks = "opponent") as opponent_count')
+            ->selectRaw('SUM(voters.remarks = "undecided") as undecided_count')
+
+            // Use LEFT JOIN to include municipalities even without voters
+            ->leftJoin('voters', 'municipalities.id', '=', 'voters.municipality_id')
+
+            // Filter for active voters and search condition
+            ->where(function ($query) {
+                $query->where('voters.status', 'Active')
+                    ->orWhereNull('voters.status');
+            })
+
+            // Group by municipality name
+            ->groupBy('municipalities.id', 'municipalities.name')
+
+            // Order by municipality name
+            ->orderBy('municipalities.name', 'asc')
+            ->get();
+
+        // Calculate percentages
+        $voterFactions = $voterFactions->map(function ($municipality) {
+            $totalVoters = $municipality->total_voters;
+
+            // Calculate the percentage for each category
+            $municipality->ally_percentage = $totalVoters ? round(($municipality->ally_count / $totalVoters) * 100, 2) : 0;
+            $municipality->opponent_percentage = $totalVoters ? round(($municipality->opponent_count / $totalVoters) * 100, 2) : 0;
+            $municipality->undecided_percentage = $totalVoters ? round(($municipality->undecided_count / $totalVoters) * 100, 2) : 0;
+
+            return $municipality;
+        });
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0, 8, "Total voters per Municipalities", 0, 1);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->MultiCell(190, 5, "The Total Voters per Municipality report provides a detailed breakdown of the number of registered voters in each municipality or city. It helps election officials, policymakers, and researchers analyze voter distribution, plan resource allocation, and anticipate turnout trends. This data is crucial for ensuring fair and efficient elections, optimizing polling station placements, and promoting voter engagement for a more inclusive democratic process.", 0, 'L');
+
+        $pdf->ln();
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(173, 216, 230); // RGB for light blue
+        $pdf->Cell(10, 10, '#', 1, 0, 'L', true);
+        $pdf->Cell(150, 10, strtoupper('Municipality / City'), 1, 0, 'L', true);
+        $pdf->Cell(30, 10, 'TOTAL', 1, 1, 'C', true);
+
+        $i = 1;
+        $pdf->SetFont('Arial', 'B', 8);
+        foreach ($voterFactions as $voter) {
+            $pdf->Cell(10, 10, $i++, 1, 0, 'L');
+            $pdf->Cell(150, 10, strtoupper($voter->name), 1, 0, 'L');
+            $pdf->Cell(30, 10, number_format($voter->total_voters), 1, 1, 'C');
+        }
+
+        $pdf->Output();
+        exit;
+    }
+
+
+    public function barangayTotalVoter()
+    {
+        $voterFactions = Barangay::select('barangays.name')
+
+            // Count voters and their remarks categories
+            ->selectRaw('COUNT(voters.id) as total_voters')
+            ->selectRaw('SUM(voters.remarks = "ally") as ally_count')
+            ->selectRaw('SUM(voters.remarks = "opponent") as opponent_count')
+            ->selectRaw('SUM(voters.remarks = "undecided") as undecided_count')
+
+            // Join with voters and municipalities
+            ->leftJoin('voters', 'barangays.id', '=', 'voters.barangay_id')
+            ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
+
+            // Filter by active voters and current user's municipality
+            ->where('barangays.municipality_id', auth()->user()->municipality_id)
+            ->where(function ($query) {
+                $query->where('voters.status', 'Active')
+                    ->orWhereNull('voters.id'); // Include barangays with no voters
+            })
+
+            // Group and order by barangay name
+            ->groupBy('barangays.name')
+            ->orderBy('barangays.name', 'asc')
+            ->get();
+
+        // Calculate percentages and handle zero voters
+        $voterFactions = $voterFactions->map(function ($barangay) {
+            $totalVoters = $barangay->total_voters;
+
+            $barangay->ally_percentage = $totalVoters ? round(($barangay->ally_count / $totalVoters) * 100, 2) : 0;
+            $barangay->opponent_percentage = $totalVoters ? round(($barangay->opponent_count / $totalVoters) * 100, 2) : 0;
+            $barangay->undecided_percentage = $totalVoters ? round(($barangay->undecided_count / $totalVoters) * 100, 2) : 0;
+
+            return $barangay;
+        });
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0, 8, "Total voters per barangay", 0, 1);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->MultiCell(190, 5, "The Total Voters per Barangay report provides a detailed breakdown of the number of registered voters in each barangay. It helps election officials, policymakers, and researchers analyze voter distribution, plan resource allocation, and anticipate turnout trends. This data is crucial for ensuring fair and efficient elections, optimizing polling station placements, and promoting voter engagement for a more inclusive democratic process.", 0, 'L');
+
+        $pdf->ln();
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(173, 216, 230); // RGB for light blue
+        $pdf->Cell(10, 10, '#', 1, 0, 'L', true);
+        $pdf->Cell(150, 10, 'BARANGAY', 1, 0, 'L', true);
+        $pdf->Cell(30, 10, 'TOTAL', 1, 1, 'C', true);
+
+        $i = 1;
+        $pdf->SetFont('Arial', 'B', 8);
+        foreach ($voterFactions as $voter) {
+            $pdf->Cell(10, 10, $i++, 1, 0, 'L');
+            $pdf->Cell(150, 10, strtoupper($voter->name), 1, 0, 'L');
+            $pdf->Cell(30, 10, number_format($voter->total_voters), 1, 1, 'C');
+        }
+
+        $pdf->Output();
+        exit;
     }
 }

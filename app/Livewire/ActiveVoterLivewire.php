@@ -37,10 +37,6 @@ class ActiveVoterLivewire extends Component
             ->leftJoin('designations', 'designations.id', '=', 'voter_designations.designation_id')
 
             ->where('barangays.id', $this->barangay)
-            ->where(function ($query) {
-                $query->where('fname', 'like', '%' . $this->search . '%')
-                    ->orWhere('lname', 'like', '%' . $this->search . '%');
-            })
 
             ->groupBy(
                 'voters.id',
@@ -56,7 +52,11 @@ class ActiveVoterLivewire extends Component
                 'voters.image_path',
             )
 
-            ->paginate(100);
+            ->get()
+            ->filter(function ($voter) {
+                return !is_null($voter->lname) && str_contains(strtolower($voter->lname), $this->search) ||
+                    !is_null($voter->fname) && str_contains(strtolower($voter->fname), $this->search);
+            });
 
         $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
 

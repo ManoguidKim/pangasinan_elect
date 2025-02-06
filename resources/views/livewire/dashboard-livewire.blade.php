@@ -90,14 +90,24 @@
                     <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">{{ number_format($activeVoter) }}</h5>
                     <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Barangay active voters graph</p>
                 </div>
-
             </div>
-            <a href="{{ route('system-admin-barangay-voter-analytics') }}" class="inline-flex items-center text-gray-500 bg-blue-200 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                View Analytic Report
-            </a>
+
+            <!-- Make buttons close to each other -->
+            <div class="flex gap-2">
+                <a href="{{ route('system-admin-reports-barangays-voter-report') }}" target="_blank"
+                    class="inline-flex items-center text-gray-500 bg-green-200 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    Print Data Report
+                </a>
+
+                <a href="{{ route('system-admin-barangay-voter-analytics') }}"
+                    class="inline-flex items-center text-gray-500 bg-blue-200 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    View Analytic
+                </a>
+            </div>
         </div>
         <div id="column-chart"></div>
     </div>
+
 
 
     <!-- Pie Charts -->

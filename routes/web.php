@@ -148,6 +148,22 @@ Route::middleware([
         ]
     )->name('system-admin-generate-reports')->middleware(['isAdminEncoder']);
 
+    Route::get(
+        'system/admin/reports/municipalities/voter/report',
+        [
+            ReportController::class,
+            'municipalTotalVoter'
+        ]
+    )->name('system-admin-reports-municipalities-voter-report')->middleware(['isSuperAdmin']);
+
+    Route::get(
+        'system/admin/reports/barangays/voter/report',
+        [
+            ReportController::class,
+            'barangayTotalVoter'
+        ]
+    )->name('system-admin-reports-barangays-voter-report')->middleware(['isAdmin']);
+
 
 
     // Validator
