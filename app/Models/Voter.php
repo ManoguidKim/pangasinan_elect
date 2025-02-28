@@ -6,6 +6,7 @@ use App\Casts\EncryptedCast;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -14,8 +15,6 @@ class Voter extends Model
 {
     use HasFactory;
     use LogsActivity;
-
-
 
     protected static $logAttributes = [
         'fname',
@@ -30,7 +29,7 @@ class Voter extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()
+        $logOptions = LogOptions::defaults()
             ->logOnly([
                 'fname',
                 'mname',
@@ -42,6 +41,12 @@ class Voter extends Model
                 'remarks'
             ])
             ->logOnlyDirty();
+
+        if (Auth::check() && Auth::user()->role === 'Admin') {
+            activity()->disableLogging();
+        }
+
+        return $logOptions;
     }
 
     protected $fillable = [
@@ -59,9 +64,9 @@ class Voter extends Model
     ];
 
 
-    protected $casts = [
-        'fname' => EncryptedCast::class,
-        'lname' => EncryptedCast::class,
-        'mname' => EncryptedCast::class
-    ];
+    // protected $casts = [
+    //     'fname' => EncryptedCast::class,
+    //     'lname' => EncryptedCast::class,
+    //     'mname' => EncryptedCast::class
+    // ];
 }

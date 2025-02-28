@@ -40,9 +40,12 @@
     <div class="relative overflow-x-auto sm:rounded-lg p-1">
         <div class="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 items-center justify-between pb-4">
             <div>
-                <a href="{{ route('system-admin-voters-create') }}" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                <!-- <a href="{{ route('system-admin-voters-create') }}" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    Add new voter 1
+                </a> -->
+                <button wire:click="openAddModal" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                     Add new voter
-                </a>
+                </button>
             </div>
 
             <label for="table-search" class="sr-only">Search</label>
@@ -119,17 +122,16 @@
 
                     <td class="px-6 py-3" width="40%">
 
-
                         @can('update', $voter)
-                        <a href="{{ route('system-admin-voters-edit', ['voter' => $voter->id]) }}" class="inline-flex items-center text-gray-500 bg-blue-200 border border-green-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <button wire:click="openEditModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-blue-200 border border-green-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                             Edit
-                        </a>
+                        </button>
                         @endcan
 
                         @can('delete', $voter)
-                        <a href="#" class="inline-flex items-center text-gray-500 bg-red-200 border border-reed-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:click="deleteVoter({{ $voter->id }})" wire:confirm="Are you sure you want to delete?">
+                        <button wire:click="delete({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-red-200 border border-reed-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:click="deleteVoter({{ $voter->id }})" wire:confirm="Are you sure you want to delete?">
                             Delete
-                        </a>
+                        </button>
                         @endcan
 
                         <a href="{{ route('system-admin-voter-designation', $voter->id) }}" class="inline-flex items-center text-gray-500 bg-yellow-200 border border-yellow-200 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
@@ -145,6 +147,200 @@
                 @endforeach
             </tbody>
         </table>
+
     </div>
+
+
+    <!-- Add Modal -->
+    @if($isModalOpen && empty($editId))
+    <div id="static-modal" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-gray-800/20">
+        <div class="relative w-full max-w-7xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 bg-blue-50">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Add Voter
+                    </h3>
+                    <button wire:click="closeModal" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8">
+                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="p-1 md:p-5 space-y-1">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" wire:model="addFname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter First Name">
+                            @error('addFname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+                            <input type="text" wire:model="addMname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500  mb-3" placeholder="Enter Middle Name">
+                            @error('addMname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" wire:model="addLname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500  mb-3" placeholder="Enter Last Name">
+                            @error('addLname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Suffix</label>
+                            <input type="text" wire:model="addSuffix" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Suffix">
+                            @error('addSuffix') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Suffix</label>
+                            <input type="date" wire:model="addDob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                            @error('addDob') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Gender</label>
+                            <select wire:model="addGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="">Choose Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            @error('addGender') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Barangay</label>
+                            <select wire:model="addBarangay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                                <option value="">Choose Barangay</option>
+                                @foreach ($barangays as $barangay)
+                                <option value="{{ $barangay->id }}">{{ $barangay->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('addBarangay') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Precinct No</label>
+                            <input type="text" wire:model="addPrecinct" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter Precinct No. Name">
+                            @error('addPrecinct') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Mark voter as:</label>
+                            <select wire:model="addRemarks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="">Choose Remarks</option>
+                                <option value="Ally">Ally</option>
+                                <option value="Opponent">Opponent</option>
+                                <option value="Undecided">Undecided</option>
+                            </select>
+                            @error('addRemarks') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button wire:click="save" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Save
+                    </button>
+                    <button wire:click="closeModal" class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @else
+
+    @if($isModalOpen && !empty($editId))
+
+    <div id="static-modal" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-gray-800/20">
+        <div class="relative w-full max-w-7xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 bg-blue-50">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Edit Voter
+                    </h3>
+                    <button wire:click="closeModal" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8">
+                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="p-1 md:p-5 space-y-1">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" wire:model="editFname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter First Name">
+                            @error('editFname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+                            <input type="text" wire:model="editMname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500  mb-3" placeholder="Enter Middle Name">
+                            @error('editMname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" wire:model="editLname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500  mb-3" placeholder="Enter Last Name">
+                            @error('editLname') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Suffix</label>
+                            <input type="text" wire:model="editSuffix" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Suffix">
+                            @error('editSuffix') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                            <input type="date" wire:model="editDob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                            @error('editDob') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Gender</label>
+                            <select wire:model="editGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="">Choose Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            @error('editGender') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Barangay</label>
+                            <select wire:model="editBarangay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                                <option value="{{ $voterBarangayDetails->id }}">{{ $voterBarangayDetails->name }}</option>
+                                @foreach ($barangays as $barangay)
+                                <option value="{{ $barangay->id }}">{{ $barangay->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('editBarangay') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Precinct No</label>
+                            <input type="text" wire:model="editPrecinct" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter Precinct No. Name">
+                            @error('editPrecinct') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Mark voter as:</label>
+                            <select wire:model="editRemarks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                                <option value="{{ $editRemarks }}">{{ $editRemarks }}</option>
+                                <option value="Ally">Ally</option>
+                                <option value="Opponent">Opponent</option>
+                                <option value="Undecided">Undecided</option>
+                            </select>
+                            @error('editRemarks') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Status</label>
+                            <select wire:model="editStatus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="{{ $editStatus }}">{{ $editStatus }}</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                            @error('editStatus') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button wire:click="save" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Save
+                    </button>
+                    <button wire:click="closeModal" class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @endif
+
+    @endif
 
 </div>
