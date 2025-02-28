@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Barangay;
+use App\Models\Organization;
 use App\Models\Voter;
+use App\Models\VoterOrganization;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -64,8 +66,15 @@ class VoterLivewire extends Component
     public $editSelectedBarangayName;
 
     public $isModalOpen = false;
+    public $isOrganizationModalOpen = false;
 
     public $barangays = [];
+
+    // Organization
+    public $organizations = [];
+    public $voterorganizations = [];
+    public $voterorganization_votername;
+    public $selectedorganization;
 
     protected $rules = [
         'fname' => 'required',
@@ -278,7 +287,13 @@ class VoterLivewire extends Component
                 'editRemarks',
                 'editStatus',
 
-                'isModalOpen'
+                'isModalOpen',
+
+                'isOrganizationModalOpen',
+                'organizations',
+                'voterorganizations',
+                'voterorganization_votername',
+                'selectedorganization'
             ]
         );
         $this->resetValidation();
@@ -326,5 +341,58 @@ class VoterLivewire extends Component
             ]
         );
         $this->isModalOpen = true;
+    }
+
+
+    // For Voter Organization
+
+    public function getOrganization()
+    {
+        $this->voterorganizations = [];
+        $this->voterorganizations = VoterOrganization::select(
+            'organizations.name',
+            'voter_organizations.voter_id',
+            'voter_organizations.id',
+            'voter_organizations.organization_id'
+        )
+            ->join('organizations', 'voter_organizations.organization_id', '=', 'organizations.id')
+            ->where(
+                [
+                    'voter_organizations.voter_id' => $this->editId
+                ]
+            )
+            ->get();
+    }
+
+    public function openOrganizationModal(Voter $voter)
+    {
+        $this->editId = $voter->id;
+        $this->voterorganization_votername = $voter->fname . ' ' . $voter->lname;
+
+        $this->organizations = Organization::where('municipality_id', auth()->user()->municipality_id)->get();
+        $this->getOrganization();
+
+        $this->isOrganizationModalOpen = true;
+    }
+
+
+
+    public function createVoterOrganization()
+    {
+        VoterOrganization::create(
+            [
+                'voter_id' => $this->editId,
+                'organization_id' => $this->selectedorganization
+            ]
+        );
+        session()->flash('message', 'Voter Organization created successfully');
+        $this->getOrganization();
+    }
+
+    public function deleteVoterOrganization(VoterOrganization $voterorganization)
+    {
+        $voterorganization->delete();
+        session()->flash('message', 'Voter Organization deleted successfully');
+        $this->getOrganization();
     }
 }
