@@ -53,7 +53,7 @@ use chillerlan\QRCode\QROptions;
                                         <div class="card-img-overlay">
                                             <div class="row mt-3">
                                                 <div class="col-md-6 ms-auto">
-                                                    <img src="{{ (new QRCode($options))->render($row->id) }}" class="card-img" alt="QR Code" width="95%" height="95%">
+                                                    <img src="{{ (new QRCode($options))->render($row->voter_id) }}" class="card-img" alt="QR Code" width="95%" height="95%">
                                                 </div>
                                             </div>
                                             <div class="row">

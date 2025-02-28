@@ -8,6 +8,7 @@ use App\Models\Designation;
 use App\Models\Organization;
 use App\Models\Voter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PrintController extends Controller
 {
@@ -36,6 +37,7 @@ class PrintController extends Controller
         if ($type == "Active Voter of Organization") {
 
             $voters = Voter::select(
+                'voters.id as voter_id',
                 'voters.fname',
                 'voters.mname',
                 'voters.lname',
@@ -44,27 +46,29 @@ class PrintController extends Controller
                 'voters.dob',
                 'voters.status',
                 'voters.remarks',
-                'voters.image_path',
-                'organizations.name'
+                DB::raw("GROUP_CONCAT(organizations.name ORDER BY organizations.name SEPARATOR ', ') as organization_names") // Concatenate organization names
             )
                 ->join('voter_organizations', 'voter_organizations.voter_id', '=', 'voters.id')
                 ->join('organizations', 'organizations.id', '=', 'voter_organizations.organization_id')
-
-                ->where('voters.municipality_id', auth()->user()->municipality_id)
-                ->where('voters.barangay_id', $barangay)
-                ->where('voters.status', 'Active');
+                ->where([
+                    ['voters.municipality_id', auth()->user()->municipality_id],
+                    ['voters.barangay_id', $barangay],
+                    ['voters.status', 'Active']
+                ]);
 
             if ($sub_type) {
                 $voters->where('organizations.id', $sub_type);
             }
 
-            $voters->orderBy('organizations.name', 'ASC');
-            $voters->get();
+            $voters = $voters->groupBy('voters.id') // Ensures one row per voter
+                ->orderBy('voters.lname', 'ASC')
+                ->get();
 
             return view('print.qr', compact('voters', 'cardLayout'));
         } else if ($type == "Active Voter of Barangay Staff") {
 
             $voters = Voter::select(
+                'voters.id as voter_id',
                 'voters.fname',
                 'voters.mname',
                 'voters.lname',
@@ -73,22 +77,23 @@ class PrintController extends Controller
                 'voters.dob',
                 'voters.status',
                 'voters.remarks',
-                'voters.image_path',
-                'designations.name'
+                DB::raw("GROUP_CONCAT(designations.name ORDER BY designations.name SEPARATOR ', ') as designation_names") // Concatenate designation names
             )
                 ->join('voter_designations', 'voter_designations.voter_id', '=', 'voters.id')
-                ->join('designations', 'designations.id', '=', 'voter_designations.organization_id')
-
-                ->where('voters.municipality_id', auth()->user()->municipality_id)
-                ->where('voters.barangay_id', $barangay)
-                ->where('voters.status', 'Active');
+                ->join('designations', 'designations.id', '=', 'voter_designations.designation_id')
+                ->where([
+                    ['voters.municipality_id', auth()->user()->municipality_id],
+                    ['voters.barangay_id', $barangay],
+                    ['voters.status', 'Active']
+                ]);
 
             if ($sub_type) {
                 $voters->where('designations.id', $sub_type);
             }
 
-            $voters->orderBy('designations.name', 'ASC');
-            $voters->get();
+            $voters = $voters->groupBy('voters.id') // Ensures one row per voter
+                ->orderBy('voters.lname', 'ASC')
+                ->get();
 
             return view('print.qr', compact('voters', 'cardLayout'));
         } else {

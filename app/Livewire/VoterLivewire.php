@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Barangay;
+use App\Models\Designation;
 use App\Models\Organization;
 use App\Models\Voter;
+use App\Models\VoterDesignation;
 use App\Models\VoterOrganization;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -67,6 +69,7 @@ class VoterLivewire extends Component
 
     public $isModalOpen = false;
     public $isOrganizationModalOpen = false;
+    public $isDesignationModalOpen = false;
 
     public $barangays = [];
 
@@ -75,6 +78,12 @@ class VoterLivewire extends Component
     public $voterorganizations = [];
     public $voterorganization_votername;
     public $selectedorganization;
+
+    // Designation
+    public $designations = [];
+    public $voterdesignations = [];
+    public $voterdesignation_votername;
+    public $selecteddesignation;
 
     protected $rules = [
         'fname' => 'required',
@@ -289,11 +298,19 @@ class VoterLivewire extends Component
 
                 'isModalOpen',
 
+                // Organization
                 'isOrganizationModalOpen',
                 'organizations',
                 'voterorganizations',
                 'voterorganization_votername',
-                'selectedorganization'
+                'selectedorganization',
+
+                // Designation
+                'isDesignationModalOpen',
+                'designations',
+                'voterdesignations',
+                'voterdesignation_votername',
+                'selecteddesignation'
             ]
         );
         $this->resetValidation();
@@ -375,8 +392,6 @@ class VoterLivewire extends Component
         $this->isOrganizationModalOpen = true;
     }
 
-
-
     public function createVoterOrganization()
     {
         VoterOrganization::create(
@@ -394,5 +409,56 @@ class VoterLivewire extends Component
         $voterorganization->delete();
         session()->flash('message', 'Voter Organization deleted successfully');
         $this->getOrganization();
+    }
+
+
+    // For Voter Designation
+
+    public function getDesignation()
+    {
+        $this->voterdesignations = [];
+        $this->voterdesignations = VoterDesignation::select(
+            'designations.name',
+            'voter_designations.voter_id',
+            'voter_designations.id',
+            'voter_designations.designation_id'
+        )
+            ->join('designations', 'voter_designations.designation_id', '=', 'designations.id')
+            ->where(
+                [
+                    'voter_designations.voter_id' => $this->editId
+                ]
+            )
+            ->get();
+    }
+
+    public function openDesignationModal(Voter $voter)
+    {
+        $this->editId = $voter->id;
+        $this->voterdesignation_votername = $voter->fname . ' ' . $voter->lname;
+
+        $this->designations = Designation::where('municipality_id', auth()->user()->municipality_id)->get();
+        $this->getDesignation();
+
+        $this->isDesignationModalOpen = true;
+    }
+
+    public function createVoterDesignation()
+    {
+        VoterDesignation::create(
+            [
+                'voter_id' => $this->editId,
+                'designation_id' => $this->selecteddesignation
+            ]
+        );
+        session()->flash('message', 'Voter Designation created successfully');
+        $this->getDesignation();
+    }
+
+    public function deleteVoterDesignation(VoterDesignation $voterdesignation)
+    {
+        $voterdesignation->delete();
+        session()->flash('message', 'Voter Designation deleted successfully');
+        $this->getDesignation();
     }
 }

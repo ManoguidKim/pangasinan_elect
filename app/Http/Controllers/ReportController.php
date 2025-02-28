@@ -158,7 +158,7 @@ class ReportController extends Controller
                     $pdf = new FPDF();
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
-                    $pdf->Cell(0, 8, $type . ' of ' . $currentBarangay, 0, 1);
+                    $pdf->Cell(0, 8, $type . ' in ' . $currentBarangay, 0, 1);
                     $pdf->SetFont('Arial', '', 8);
                     $pdf->Cell(190, 5, 'An active voter is an individual who participates in elections by registering to vote and casting their ballot. This engagement can occur in various forms,', 0, 1, 'L');
                     $pdf->Cell(190, 5, 'including voting in local, state, and national elections, as well as participating in primaries and referendums. Active voters often stay informed about', 0, 1, 'L');
@@ -335,7 +335,7 @@ class ReportController extends Controller
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial', 'B', 14);
-        $pdf->Cell(0, 8, "Total voters per barangay", 0, 1);
+        $pdf->Cell(0, 8, "Total voters per barangay ", 0, 1);
         $pdf->SetFont('Arial', '', 8);
         $pdf->MultiCell(190, 5, "The Total Voters per Barangay report provides a detailed breakdown of the number of registered voters in each barangay. It helps election officials, policymakers, and researchers analyze voter distribution, plan resource allocation, and anticipate turnout trends. This data is crucial for ensuring fair and efficient elections, optimizing polling station placements, and promoting voter engagement for a more inclusive democratic process.", 0, 'L');
 
