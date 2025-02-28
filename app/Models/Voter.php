@@ -14,40 +14,43 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Voter extends Model
 {
     use HasFactory;
-    use LogsActivity;
 
-    protected static $logAttributes = [
-        'fname',
-        'mname',
-        'lname',
-        'suffix',
-        'precinct_no',
-        'gender',
-        'dob',
-        'remarks'
-    ];
+    // protected static $logAttributes = [
+    //     'fname',
+    //     'mname',
+    //     'lname',
+    //     'suffix',
+    //     'precinct_no',
+    //     'gender',
+    //     'dob',
+    //     'remarks'
+    // ];
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        $logOptions = LogOptions::defaults()
-            ->logOnly([
-                'fname',
-                'mname',
-                'lname',
-                'suffix',
-                'precinct_no',
-                'gender',
-                'dob',
-                'remarks'
-            ])
-            ->logOnlyDirty();
+    // protected static $logOnlyDirty = true; // Log changes only
 
-        if (Auth::check() && Auth::user()->role === 'Admin') {
-            activity()->disableLogging();
-        }
+    // protected static $logEvents = ['created', 'updated', 'deleted']; // Enable delete logging
 
-        return $logOptions;
-    }
+    // public function getActivitylogOptions(): LogOptions
+    // {
+    //     // Check if the user is an admin
+    //     if (Auth::check() && Auth::user()->role === 'Admin') {
+    //         return LogOptions::defaults()->disableLogging(); // Disable logging for admins
+    //     }
+
+    //     return LogOptions::defaults()
+    //         ->logOnly([
+    //             'fname',
+    //             'mname',
+    //             'lname',
+    //             'suffix',
+    //             'precinct_no',
+    //             'gender',
+    //             'dob',
+    //             'remarks'
+    //         ])
+    //         ->logOnlyDirty()
+    //         ->useLogName('voter_activity'); // Name the log for easier filtering
+    // }
 
     protected $fillable = [
         'fname',
@@ -62,11 +65,4 @@ class Voter extends Model
         'remarks',
         'image_path'
     ];
-
-
-    // protected $casts = [
-    //     'fname' => EncryptedCast::class,
-    //     'lname' => EncryptedCast::class,
-    //     'mname' => EncryptedCast::class
-    // ];
 }

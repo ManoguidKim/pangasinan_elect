@@ -8,12 +8,10 @@ use App\Models\Organization;
 use App\Models\Voter;
 use App\Models\VoterDesignation;
 use App\Models\VoterOrganization;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class VoterLivewire extends Component
 {

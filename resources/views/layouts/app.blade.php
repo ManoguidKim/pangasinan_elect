@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <nav class="fixed top-0 z-50 w-full bg-blue-200 dark:bg-gray-800 dark:border-gray-700">
+    <nav class="fixed top-0 z-50 w-full bg-gray-500 dark:bg-gray-800 dark:border-gray-700">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
@@ -41,7 +41,7 @@
                     <a href="https://flowbite.com" class="flex ms-2 md:me-24">
                         <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" /> -->
                         <span
-                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-600">E-lect</span>
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-50">Election Support Monitoring System</span>
                     </a>
                 </div>
                 <div class="flex items-center">
@@ -93,9 +93,9 @@
     </nav>
 
     <aside id="logo-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-white sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-50 border-r border-white sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar">
-        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-50 border-gray-200 dark:bg-gray-800">
             <ul class="space-y-2 font-medium">
 
                 @if (auth()->user()->role == 'Super Admin')
@@ -294,7 +294,7 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="manage-dropdown" class="hidden py-2 space-y-2">
+                    <ul id="manage-dropdown" class=" py-2 space-y-2">
                         <li>
                             <a href="{{ route('system-admin-voters') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Voter</a>
@@ -378,7 +378,7 @@
                 </li>
                 @endif
 
-                @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Encoder')
+                @if (auth()->user()->role == 'Admin')
                 <li>
                     <button type="button"
                         class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
