@@ -99,6 +99,8 @@ class PrintController extends Controller
         } else {
             $voters = Voter::where('barangay_id', $barangay)
                 ->where('municipality_id', auth()->user()->municipality_id)
+                ->whereNull('organization_id')
+                ->orWhereNull('designation_id')
                 ->orderBy('lname')
                 ->get();
 

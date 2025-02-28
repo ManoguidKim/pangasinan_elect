@@ -120,15 +120,15 @@ class VoterLivewire extends Component
             ->where('voters.municipality_id', auth()->user()->municipality_id)
             ->where('voters.barangay_id', $this->searchBarangay)
             ->where('voters.status', 'Active')
+            ->where(function ($query) {
+                $search = strtolower($this->search);
+                $query->whereRaw('LOWER(voters.lname) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(voters.fname) LIKE ?', ["%$search%"]);
+            })
             ->orderBy('voters.lname')
+            ->limit(100)
+            ->get();
 
-            ->orderBy('voters.lname')
-            ->get()
-
-            ->filter(function ($voter) {
-                return !is_null($voter->lname) && str_contains(strtolower($voter->lname), $this->search) ||
-                    !is_null($voter->fname) && str_contains(strtolower($voter->fname), $this->search);
-            });
 
         $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
 

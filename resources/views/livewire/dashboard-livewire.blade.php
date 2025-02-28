@@ -50,7 +50,7 @@
                         <h6 class="mb-2 text-2xl font-semibold tracking-tight text-gray-600 dark:text-white uppercase">Total Ally</h6>
                     </a>
                     <p class="mb-3 font-normal text-gray-500 dark:text-gray-400"></p>
-                    <a href="{{ route('system-admin-active-voters') }}" class="inline-flex font-medium items-center text-blue-600 hover:underline">
+                    <a href="{{ route('system-admin-voter-faction') }}" class="inline-flex font-medium items-center text-blue-600 hover:underline">
                         Click to view details
                     </a>
                 </div>
