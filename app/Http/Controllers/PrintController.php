@@ -9,6 +9,7 @@ use App\Models\Organization;
 use App\Models\Voter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class PrintController extends Controller
 {
@@ -115,6 +116,17 @@ class PrintController extends Controller
 
             return view('print.qr', compact('voters', 'cardLayout'));
         }
+    }
+
+    public function printSelected()
+    {
+        return view(
+            'print.qr',
+            [
+                'voters' => Session::get('voters'),
+                'cardLayout' => Session::get('card')
+            ]
+        );
     }
 
     /**

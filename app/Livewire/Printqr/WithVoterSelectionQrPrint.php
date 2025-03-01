@@ -5,6 +5,7 @@ namespace App\Livewire\Printqr;
 use App\Models\Barangay;
 use App\Models\CardLayout;
 use App\Models\Voter;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class WithVoterSelectionQrPrint extends Component
@@ -46,21 +47,25 @@ class WithVoterSelectionQrPrint extends Component
 
     public function printSelected()
     {
+
         $cardLayout = CardLayout::where('municipality_id', auth()->user()->municipality_id)
             ->first()
             ->image_path;
-        $barangay = $this->searchBarangay ?? null;
 
-        if (!$barangay) {
-            session()->flash('error', 'Please select a barangay.');
-            return;
-        }
         $voters = Voter::whereIn('id', $this->checkedVoters)
             ->orderBy('lname')
             ->get();
 
         // This is not livewire is it posible?
-        return view('print.qr', compact('voters', 'cardLayout'));
+        Session::put('voters', $voters);
+        Session::put('card', $cardLayout);
+
+        return redirect()->route('system-admin-print-selected-voters');
+    }
+
+    public function removeSelected()
+    {
+        $this->checkedVoters = [];
     }
 
     public function render()
@@ -89,6 +94,7 @@ class WithVoterSelectionQrPrint extends Component
                     ->orWhereRaw('LOWER(voters.fname) LIKE ?', ["%$search%"]);
             })
             ->orderBy('voters.lname')
+            ->limit(50)
             ->get();
 
 
