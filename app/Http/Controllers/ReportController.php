@@ -22,6 +22,8 @@ class ReportController extends Controller
         );
     }
 
+
+
     public function initialize(Request $request)
     {
         $barangay               = $request->input('barangay');

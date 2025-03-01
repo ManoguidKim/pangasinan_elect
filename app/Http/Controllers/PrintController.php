@@ -26,6 +26,17 @@ class PrintController extends Controller
         );
     }
 
+    public function printSelection()
+    {
+        $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
+        return view(
+            'print.printselection',
+            [
+                'barangays' => $barangays
+            ]
+        );
+    }
+
     public function print(Request $request)
     {
         $barangay               = $request->input('barangay');
@@ -99,8 +110,6 @@ class PrintController extends Controller
         } else {
             $voters = Voter::where('barangay_id', $barangay)
                 ->where('municipality_id', auth()->user()->municipality_id)
-                ->whereNull('organization_id')
-                ->orWhereNull('designation_id')
                 ->orderBy('lname')
                 ->get();
 

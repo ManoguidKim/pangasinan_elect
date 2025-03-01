@@ -212,6 +212,7 @@ Route::middleware([
     Route::post('system/validator/save-capture-image/{voter}', [CaptureImageController::class, 'updateVoterImage'])->name('system-validator-save-capture-image')->middleware(['isAdminValidator']);
 
     Route::get('system/admin/print-voter-qr', [PrintController::class, 'index'])->name('system-admin-print-voter-qr')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/print-voter-qrs', [PrintController::class, 'printSelection'])->name('system-admin-selection-print-voter-qr')->middleware(['isAdminEncoder']);
     Route::post('system/admin/generate-qr', [PrintController::class, 'print'])->name('system-admin-generate-qr')->middleware(['isAdminEncoder']);
 
     Route::post('system/admin/dynamic-subtype', [DynamicController::class, 'getSubType'])->name('system-admin-dynamic-subtype')->middleware(['isAdminEncoder']);
