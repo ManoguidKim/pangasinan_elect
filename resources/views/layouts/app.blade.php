@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <nav class="fixed top-0 z-50 w-full bg-gray-500 dark:bg-gray-800 dark:border-gray-700">
+    <nav class="fixed top-0 z-50 w-full bg-blue-200 dark:bg-gray-800 dark:border-gray-700">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start rtl:justify-end">
@@ -41,7 +41,7 @@
                     <a href="https://flowbite.com" class="flex ms-2 md:me-24">
                         <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" /> -->
                         <span
-                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-50">TQS Election Support Monitoring System</span>
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-900">Election Support Monitoring System</span>
                     </a>
                 </div>
                 <div class="flex items-center">
@@ -211,7 +211,7 @@
                 </li>
 
                 <!-- Logs -->
-                <li>
+                <!-- <li>
                     <button type="button"
                         class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                         aria-controls="other-logs-dropdown" data-collapse-toggle="other-logs-dropdown">
@@ -232,7 +232,7 @@
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">System Logs</a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 @endif
 
                 @if (auth()->user()->role == 'Admin')
@@ -379,7 +379,7 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="logs-dropdown" class="hidden py-2 space-y-2">
+                    <ul id="logs-dropdown" class=" py-2 space-y-2">
                         <!-- <li>
                             <a href="{{ route('system-admin-logs') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Activity Logs</a>

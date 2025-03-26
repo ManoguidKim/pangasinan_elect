@@ -118,12 +118,11 @@ class UploadController extends Controller
                 // If no barangay is found, set it to null or handle the error
                 $barangayId = $barangay ? $barangay->id : null;
 
-
                 $remarks = $row['side'];
                 if ($remarks == "UndToAlly" || $remarks == "OppoToAlly") {
                     $remarks = "Ally";
                 }
-                if ($remarks == "") {
+                if ($remarks == "" || $remarks == "NULL") {
                     $remarks = "Undecided";
                 }
 

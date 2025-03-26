@@ -22,6 +22,7 @@ class ScanlogController extends Controller
             ->leftJoin('voters', 'voters.barangay_id', '=', 'barangays.id')
             ->leftJoin('scanlogs', 'scanlogs.voter_id', '=', 'voters.id')
 
+            ->where('voters.remarks', 'Ally')
             ->where('barangays.municipality_id', auth()->user()->municipality_id)
 
             ->groupBy('barangays.name')

@@ -26,6 +26,9 @@
                     <th scope="col" class="px-6 py-3">
                         Scan Log
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +46,12 @@
                     <td class="px-6 py-4">
                         {{ date('F, d Y ----- h:i A', strtotime($log->created_at)) }}
                     </td>
+                    <td class="px-6 py-4">
+                        <button class="inline-flex items-center text-gray-500 bg-white border border-red-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:click="deleteLog({{ $log->id }})" wire:confirm="Are you sure you want to delete logs?">
+                            Delete
+                        </button>
+                    </td>
+
                 </tr>
                 @endforeach
             </tbody>

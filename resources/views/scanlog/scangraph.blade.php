@@ -49,7 +49,7 @@
             data: chartData,
         }],
         chart: {
-            height: 1500, // Adjusted height for vertical bars
+            height: 3000, // Adjusted height for vertical bars
             type: 'bar'
         },
         plotOptions: {
@@ -76,7 +76,7 @@
             showForSingleSeries: true,
             customLegendItems: ['Actual', 'Expected'],
             markers: {
-                fillColors: ['#4052d6', '#775DD0']
+                fillColors: ['#4052d6', '#EE4B2B']
             }
         }
     };

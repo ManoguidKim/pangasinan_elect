@@ -35,4 +35,9 @@ class ScanlogView extends Component
             'scanlogs' => $scanlogs,
         ]);
     }
+
+    public function deleteLog(Scanlog $log)
+    {
+        $log->delete();
+    }
 }
