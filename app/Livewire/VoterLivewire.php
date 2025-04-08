@@ -8,6 +8,7 @@ use App\Models\Organization;
 use App\Models\Voter;
 use App\Models\VoterDesignation;
 use App\Models\VoterOrganization;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Activitylog\LogOptions;
@@ -106,7 +107,7 @@ class VoterLivewire extends Component
     public function render()
     {
         $voters = Voter::select(
-            'voters.is_guiconsulta',
+            DB::raw("CASE WHEN voters.is_guiconsulta = 1 THEN 'Yes' ELSE 'No' END as is_guiconsulta"),
             'voters.id',
             'voters.fname',
             'voters.mname',
