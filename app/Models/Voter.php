@@ -63,6 +63,7 @@ class Voter extends Model
         'gender',
         'dob',
         'remarks',
-        'image_path'
+        'image_path',
+        'is_uiconsulta'
     ];
 }

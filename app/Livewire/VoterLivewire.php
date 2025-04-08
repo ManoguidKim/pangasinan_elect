@@ -47,6 +47,7 @@ class VoterLivewire extends Component
     public $addGender;
     public $addDob;
     public $addRemarks;
+    public $addGuiconsulta;
 
 
     // Edit Modal Variable
@@ -60,6 +61,8 @@ class VoterLivewire extends Component
     public $editGender;
     public $editDob;
     public $editRemarks;
+    public $editGuiconsulta;
+
     public $editStatus;
 
     public $editSelectedBarangayId;
@@ -103,6 +106,7 @@ class VoterLivewire extends Component
     public function render()
     {
         $voters = Voter::select(
+            'voters.is_guiconsulta',
             'voters.id',
             'voters.fname',
             'voters.mname',
@@ -196,7 +200,10 @@ class VoterLivewire extends Component
                 'addBarangay' => 'required|exists:barangays,id',
                 'addPrecinct' => 'required|string|max:50',
                 'addRemarks' => 'required|string|max:500',
+                'addGuiconsulta' => 'nullable|in:0,1',
             ]);
+
+            $validatedData['addGuiconsulta'] = $validatedData['addGuiconsulta'] ?? 0;
 
             // Ensure user is authenticated before accessing properties
             if (auth()->check()) {
@@ -212,6 +219,7 @@ class VoterLivewire extends Component
                     'precinct_no' => $validatedData['addPrecinct'],
                     'remarks' => $validatedData['addRemarks'],
                     'status' => "Active",
+                    'is_guiconsulta' => $validatedData['addGuiconsulta'],
                 ]);
             } else {
                 session()->flash('message', 'You must be logged in to add a voter.');
@@ -229,7 +237,10 @@ class VoterLivewire extends Component
                 'editPrecinct' => 'required|string|max:50',
                 'editRemarks' => 'required|string|max:500',
                 'editStatus' => 'required|string|max:500',
+                'editGuiconsulta' => 'nullable|in:0,1',
             ]);
+
+            $validatedData['editGuiconsulta'] = $validatedData['editGuiconsulta'] ?? 0;
 
             // dd($validatedData);
 
@@ -247,6 +258,7 @@ class VoterLivewire extends Component
                     'precinct_no' => $validatedData['editPrecinct'],
                     'remarks' => $validatedData['editRemarks'],
                     'status' => $validatedData['editStatus'],
+                    'is_guiconsulta' => $validatedData['editGuiconsulta'],
                 ]);
             } else {
                 session()->flash('message', 'You must be logged in to add a voter.');
@@ -280,6 +292,7 @@ class VoterLivewire extends Component
                 'addGender',
                 'addDob',
                 'addRemarks',
+                'addGuiconsulta',
 
                 // Edit
                 'editId',
@@ -293,6 +306,7 @@ class VoterLivewire extends Component
                 'editDob',
                 'editRemarks',
                 'editStatus',
+                'editGuiconsulta',
 
                 'isModalOpen',
 
@@ -327,6 +341,7 @@ class VoterLivewire extends Component
         $this->editDob      = date('Y-m-d', strtotime($voter->dob));
         $this->editRemarks  = $voter->remarks;
         $this->editStatus   = $voter->status;
+        $this->editGuiconsulta   = $voter->is_guiconsulta;
 
         $this->editSelectedBarangayId = $voter->barangay_id;
         $this->voterBarangayDetails = Barangay::where(

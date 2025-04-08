@@ -88,6 +88,9 @@
                     <th scope="col" class="px-6 py-3">
                         Remarks
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Is Guiconsulta
+                    </th>
                     <th scope="col" class="px-6 py-3" width="15%">
                         Action
                     </th>
@@ -119,6 +122,7 @@
 
                     <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->status }}</td>
                     <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->remarks }}</td>
+                    <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->is_guiconsulta }}</td>
 
                     <td class="px-6 py-3" width="40%">
 
@@ -215,13 +219,21 @@
                             @error('addPrecinct') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
                             <label class="block text-sm font-medium text-gray-700">Mark voter as:</label>
-                            <select wire:model="addRemarks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select wire:model="addRemarks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
                                 <option value="">Choose Remarks</option>
                                 <option value="Ally">Ally</option>
                                 <option value="Opponent">Opponent</option>
                                 <option value="Undecided">Undecided</option>
                             </select>
                             @error('addRemarks') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Is Guiconsulta?:</label>
+                            <select wire:model="addGuiconsulta" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="">Is guiconsulta?</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                            @error('addGuiconsulta') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -313,6 +325,14 @@
                                 <option value="Undecided">Undecided</option>
                             </select>
                             @error('editRemarks') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Is Guiconsulta?:</label>
+                            <select wire:model="editGuiconsulta" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
+                                <option value="">Is guiconsulta?</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                            @error('editGuiconsulta') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
                             <label class="block text-sm font-medium text-gray-700">Status</label>
                             <select wire:model="editStatus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
