@@ -107,7 +107,7 @@ class VoterLivewire extends Component
     public function render()
     {
         $voters = Voter::select(
-            DB::raw("CASE WHEN voters.is_guiconsulta = 1 THEN 'Yes' ELSE 'No' END as is_guiconsulta"),
+            'voters.is_guiconsulta',
             'voters.id',
             'voters.fname',
             'voters.mname',
@@ -128,7 +128,8 @@ class VoterLivewire extends Component
             ->where(function ($query) {
                 $search = strtolower($this->search);
                 $query->whereRaw('LOWER(voters.lname) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('LOWER(voters.fname) LIKE ?', ["%$search%"]);
+                    ->orWhereRaw('LOWER(voters.fname) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(voters.remarks) LIKE ?', ["%$search%"]);
             })
             ->orderBy('voters.lname')
             ->limit(100)
@@ -201,10 +202,10 @@ class VoterLivewire extends Component
                 'addBarangay' => 'required|exists:barangays,id',
                 'addPrecinct' => 'required|string|max:50',
                 'addRemarks' => 'required|string|max:500',
-                'addGuiconsulta' => 'nullable|in:0,1',
+                'addGuiconsulta' => 'nullable|in:Yes,No',
             ]);
 
-            $validatedData['addGuiconsulta'] = $validatedData['addGuiconsulta'] ?? 0;
+            $validatedData['addGuiconsulta'] = $validatedData['addGuiconsulta'] ?? NULL;
 
             // Ensure user is authenticated before accessing properties
             if (auth()->check()) {
@@ -238,10 +239,10 @@ class VoterLivewire extends Component
                 'editPrecinct' => 'required|string|max:50',
                 'editRemarks' => 'required|string|max:500',
                 'editStatus' => 'required|string|max:500',
-                'editGuiconsulta' => 'nullable|in:0,1',
+                'editGuiconsulta' => 'nullable|in:Yes,No',
             ]);
 
-            $validatedData['editGuiconsulta'] = $validatedData['editGuiconsulta'] ?? 0;
+            $validatedData['editGuiconsulta'] = $validatedData['editGuiconsulta'] ?? NULL;
 
             // dd($validatedData);
 

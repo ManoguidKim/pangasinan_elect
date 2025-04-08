@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FileUploadRequest;
 use App\Models\Barangay;
+use App\Models\TemporaryVoter;
 use App\Models\Voter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -297,6 +298,92 @@ class UploadController extends Controller
                     'remarks' => $remarks,
                     'image_path' => "" // You can adjust this if needed
                 ]);
+            }
+
+            // Commit transaction if everything is successful
+            DB::commit();
+
+            return response()->json(['success' => 'CSV data imported successfully']);
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            DB::rollBack();
+
+            return response()->json(['error' => 'Failed to import CSV data', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function uploadGuiconsulta()
+    {
+        set_time_limit(2000);
+
+        $path = storage_path('app/public/GuiconsultaExcel2.csv');
+
+        // Check if the file exists
+        if (!file_exists($path)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        // Read the CSV file
+        $csv = Reader::createFromPath($path, 'r');
+        $csv->setHeaderOffset(0); // Set the header offset for CSV parsing
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        try {
+            foreach ($csv as $row) {
+                // Ensure all required keys exist
+                if (!isset(
+                    $row['Barangay'],
+                    $row['First Name'],
+                    $row['Last Name'],
+                    $row['Middle Name']
+                )) {
+                    continue; // Skip the row if any required column is missing
+                }
+
+                $barangayName = strtoupper(trim($row['Barangay']));
+
+                // Query to get the barangay ID
+                $barangay = Barangay::whereRaw('UPPER(TRIM(name)) = ? AND municipality_id = ?', [$barangayName, auth()->user()->municipality_id])->first();
+
+                // Check if a barangay is found
+                if (!$barangay) {
+                    // Skip this iteration if the barangay is not found
+                    continue;
+                }
+
+                $barangay_id = $barangay->id; // Get the ID from the result
+
+                $voterDetails = Voter::where(
+                    [
+                        'fname' => trim($row['First Name']),
+                        'lname' => trim($row['Last Name']),
+                        'mname' => trim($row['Middle Name']),
+                        'barangay_id' => $barangay_id,
+                    ]
+                )->first();
+
+                if (!empty($voterDetails)) {
+                    Voter::where('id', $voterDetails->id)->update(['is_guiconsulta' => 'No']);
+                } else {
+                    // Create a new Voter record
+                    // Voter::create([
+                    //     'municipality_id' => auth()->user()->municipality_id,
+                    //     'barangay_id' => $barangay_id,
+                    //     'fname' => mb_convert_encoding($row['First Name'], 'UTF-8', 'UTF-8'),
+                    //     'mname' => mb_convert_encoding($row['Middle Name'], 'UTF-8', 'UTF-8'), // You can adjust this if needed
+                    //     'lname' => mb_convert_encoding($row['Last Name'], 'UTF-8', 'UTF-8'),
+                    //     'suffix' => "", // You can adjust this if needed
+                    //     'precinct_no' => "",
+                    //     'gender' => "", // You can adjust this if needed
+                    //     'dob' => "", // You can adjust this if needed
+                    //     'status' => "Active",
+                    //     'remarks' => "Ally",
+                    //     'image_path' => "", // You can adjust this if needed
+                    //     'is_guiconsulta' => 1
+                    // ]);
+                }
             }
 
             // Commit transaction if everything is successful

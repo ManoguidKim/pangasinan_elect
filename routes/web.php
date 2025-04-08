@@ -231,6 +231,8 @@ Route::middleware([
     Route::get('system/admin/importCsv', [UploadController::class, 'importCsv'])->name('system-admin-importCsv')->middleware(['isAdmin']);
     Route::get('system/admin/uploadotherfiles', [UploadController::class, 'importMunicipalityCsv'])->name('system-admin-uploadotherfiles')->middleware(['isAdmin']);
 
+    Route::get('system/admin/guiconsulta', [UploadController::class, 'uploadGuiconsulta'])->name('system-admin-guiconsulta')->middleware(['isAdmin']);
+
 
     // Download
     Route::get('system/admin/downloadformat', [DownloadController::class, 'index'])->name('system-admin-download-format')->middleware(['isAdminEncoder']);

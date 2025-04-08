@@ -230,8 +230,8 @@
                             <label class="block text-sm font-medium text-gray-700">Is Guiconsulta?:</label>
                             <select wire:model="addGuiconsulta" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="">Is guiconsulta?</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </select>
                             @error('addGuiconsulta') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
@@ -329,8 +329,8 @@
                             <label class="block text-sm font-medium text-gray-700">Is Guiconsulta?:</label>
                             <select wire:model="editGuiconsulta" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
                                 <option value="">Is guiconsulta?</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </select>
                             @error('editGuiconsulta') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
