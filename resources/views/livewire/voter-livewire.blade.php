@@ -110,7 +110,7 @@
                         <img class="w-10 h-10 rounded-full" src="{{ asset('storage/' . $voter->image_path) }}">
                         @endif
                         <div class="ps-3">
-                            <div class="text-base font-semibold">{{ $voter->fname . ' ' . $voter->mname .  ' ' . $voter->lname . ' ' . $voter->suffix }}</div>
+                            <div class="text-base font-semibold">{{ $voter->lname . ' ' . $voter->suffix .  ' ' . $voter->lname . ' ' . $voter->mname }}</div>
                             <div class="font-normal text-gray-500 italic">{{ 'Gender : ' . $voter->gender . ' - Date of birth : . ' . date('F d, Y', strtotime($voter->dob)) }}</div>
                             <div class="font-normal text-sm text-red-400 italic">{{ 'Barangay : ' . $voter->name }}</div>
                         </div>
