@@ -113,17 +113,20 @@ class VoterLivewire extends Component
             'voters.mname',
             'voters.lname',
             'voters.suffix',
-            'barangays.name',
+            'barangays.name as barangay_name',
             'voters.precinct_no',
             'voters.gender',
             'voters.dob',
             'voters.status',
             'voters.remarks',
-            'voters.image_path'
+            'voters.image_path',
+            DB::raw("CASE WHEN voters.is_checked = 1 THEN 'Yes' ELSE '' END as checked_status")
         )
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
             ->where('voters.municipality_id', auth()->user()->municipality_id)
-            ->where('voters.barangay_id', $this->searchBarangay)
+            ->when($this->searchBarangay, function ($query) {
+                $query->where('voters.barangay_id', $this->searchBarangay);
+            })
             ->where('voters.status', 'Active')
             ->where(function ($query) {
                 $search = strtolower($this->search);
@@ -132,8 +135,10 @@ class VoterLivewire extends Component
                     ->orWhereRaw('LOWER(voters.remarks) LIKE ?', ["%$search%"]);
             })
             ->orderBy('voters.lname')
-            ->limit(100)
+            ->limit(200)
             ->get();
+
+
 
 
         $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
@@ -145,6 +150,20 @@ class VoterLivewire extends Component
                 'barangays' => $barangays
             ]
         );
+    }
+
+    public function checkVoter($voterid)
+    {
+        Voter::where('id', $voterid)->update([
+            'is_checked' => 1,
+        ]);
+    }
+
+    public function unCheckVoter($voterid)
+    {
+        Voter::where('id', $voterid)->update([
+            'is_checked' => 0,
+        ]);
     }
 
     public function storeVoter()
@@ -222,6 +241,7 @@ class VoterLivewire extends Component
                     'remarks' => $validatedData['addRemarks'],
                     'status' => "Active",
                     'is_guiconsulta' => $validatedData['addGuiconsulta'],
+                    'is_checked' => 1
                 ]);
             } else {
                 session()->flash('message', 'You must be logged in to add a voter.');

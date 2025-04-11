@@ -43,7 +43,6 @@ class DatabaseSeeder extends Seeder
             District::create($district);
         }
 
-
         // Municipalitites
         $municipalities = [
             // 1st District
@@ -113,6 +112,20 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->populateBarangay();
+
+
+
+
+        // Populate Designation
+        $designation = [
+            ['name' => 'Purok Leader', 'municipality_id' => 1],
+            ['name' => 'Head Barcoo', 'municipality_id' => 1],
+            ['name' => 'Barcoo', 'municipality_id' => 1],
+        ];
+
+        foreach ($designation as $designation) {
+            Designation::create($designation);
+        }
     }
 
     public function populateBarangay()

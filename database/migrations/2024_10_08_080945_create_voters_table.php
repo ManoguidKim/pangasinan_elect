@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('status', 500)->default('Active');
             $table->string('remarks', 500)->nullable()->default('');
             $table->text('image_path')->nullable();
+            $table->string('is_guiconsulta')->nullable()->default(NULL);
+            $table->integer('is_checked')->nullable()->default(0);
             $table->timestamps();
         });
     }

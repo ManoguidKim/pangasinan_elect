@@ -91,7 +91,10 @@
                     <th scope="col" class="px-6 py-3">
                         Is Guiconsulta
                     </th>
-                    <th scope="col" class="px-6 py-3" width="15%">
+                    <th scope="col" class="px-6 py-3">
+                        Is Checked?
+                    </th>
+                    <th scope="col" class="px-6 py-3" width="5%">
                         Action
                     </th>
                 </tr>
@@ -112,7 +115,7 @@
                         <div class="ps-3">
                             <div class="text-base font-semibold">{{ $voter->lname . ' ' . $voter->suffix .  ' ' . $voter->fname . ' ' . $voter->mname }}</div>
                             <div class="font-normal text-gray-500 italic">{{ 'Gender : ' . $voter->gender . ' - Date of birth : . ' . date('F d, Y', strtotime($voter->dob)) }}</div>
-                            <div class="font-normal text-sm text-red-400 italic">{{ 'Barangay : ' . $voter->name }}</div>
+                            <div class="font-normal text-sm text-red-400 italic">{{ 'Barangay : ' . $voter->barangay_name }}</div>
                         </div>
                     </th>
 
@@ -122,9 +125,11 @@
 
                     <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->status }}</td>
                     <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->remarks }}</td>
-                    <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->is_guiconsulta }}</td>
 
-                    <td class="px-6 py-3" width="40%">
+                    <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->is_guiconsulta }}</td>
+                    <td class="px-6 py-3 font-bold text-gray-400">{{ $voter->checked_status }}</td>
+
+                    <td class="px-6 py-3" width="20%">
 
                         @can('update', $voter)
                         <button wire:click="openEditModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-green-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
@@ -132,19 +137,29 @@
                         </button>
                         @endcan
 
+                        @if($voter->checked_status == "")
+                        <button wire:click="checkVoter({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                            Check
+                        </button>
+                        @else
+                        <button wire:click="unCheckVoter({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                            Uncheck
+                        </button>
+                        @endif
+
                         @can('delete', $voter)
                         <button wire:click="delete({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-red-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:click="deleteVoter({{ $voter->id }})" wire:confirm="Are you sure you want to delete?">
                             Delete
                         </button>
                         @endcan
 
-                        <button wire:click="openDesignationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <!-- <button wire:click="openDesignationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                             Assign Designation
                         </button>
 
                         <button wire:click="openOrganizationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                             Assign Organization
-                        </button>
+                        </button> -->
                     </td>
                 </tr>
                 @endforeach

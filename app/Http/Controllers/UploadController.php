@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FileUploadRequest;
 use App\Models\Barangay;
+use App\Models\Designation;
 use App\Models\TemporaryVoter;
 use App\Models\Voter;
+use App\Models\VoterDesignation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
@@ -85,7 +87,7 @@ class UploadController extends Controller
     {
         set_time_limit(600);  // Allow the script to run for up to 10 minutes
 
-        $path = storage_path('app/public/voter.csv');
+        $path = storage_path('app/public/voter_details.csv');
 
         // Check if the file exists
         if (!file_exists($path)) {
@@ -128,7 +130,7 @@ class UploadController extends Controller
                 }
 
                 // Create a new Voter record
-                Voter::create([
+                $newVoter = Voter::create([
                     'fname' => $row['firstname'],
                     'mname' => $row['middlename'],
                     'lname' => $row['lastname'],
@@ -142,6 +144,27 @@ class UploadController extends Controller
                     'remarks' => $remarks,
                     'image_path' => '',
                 ]);
+
+                if (!empty($row['designation'])) {
+                    if ($row['designation'] == "PUROK LEADER") {
+                        VoterDesignation::create([
+                            'voter_id' => $newVoter->id,
+                            'designation_id' => 1
+                        ]);
+                    }
+                    if ($row['designation'] == "HEAD BARCOO") {
+                        VoterDesignation::create([
+                            'voter_id' => $newVoter->id,
+                            'designation_id' => 2
+                        ]);
+                    }
+                    if ($row['designation'] == "BARCOO") {
+                        VoterDesignation::create([
+                            'voter_id' => $newVoter->id,
+                            'designation_id' => 3
+                        ]);
+                    }
+                }
             }
 
             // Commit transaction if everything is successful
