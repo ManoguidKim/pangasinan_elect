@@ -92,7 +92,7 @@ Route::middleware([
 
     Route::get('system/welcome', [PageController::class, 'index'])->name('system-welcome');
 
-    Route::get('system/admin', DashboardLivewire::class)->name('system-dashboard')->middleware(['isAdminEncoder']);
+    Route::get('system/admin', DashboardLivewire::class)->name('system-dashboard')->middleware(['isAdmin']);
     // Voters
     Route::get('system/admin/voters', VoterLivewire::class)->name('system-admin-voters')->middleware(['isAdminEncoder']);
     Route::get('system/admin/inactivevoters', InactiveVoter::class)->name('system-admin-inactivevoters')->middleware(['isAdminEncoder']);
