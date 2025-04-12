@@ -28,6 +28,7 @@ use App\Livewire\Camera\ImageCapture;
 use App\Livewire\DashboardLivewire;
 use App\Livewire\DesignationLivewire;
 use App\Livewire\Faction\VoterFactionLivewire;
+use App\Livewire\InactiveVoter;
 use App\Livewire\LogsLivewire;
 use App\Livewire\OrganizationLivewire;
 use App\Livewire\Printqr\PrintQrLivewire;
@@ -94,6 +95,7 @@ Route::middleware([
     Route::get('system/admin', DashboardLivewire::class)->name('system-dashboard')->middleware(['isAdminEncoder']);
     // Voters
     Route::get('system/admin/voters', VoterLivewire::class)->name('system-admin-voters')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/inactivevoters', InactiveVoter::class)->name('system-admin-inactivevoters')->middleware(['isAdminEncoder']);
     // Active Voters
     Route::get('system/admin/active-voters', ActiveVoterLivewire::class)->name('system-admin-active-voters')->middleware(['isAdmin']);
     // Designation

@@ -296,7 +296,11 @@
                     <ul id="manage-dropdown" class=" py-2 space-y-2">
                         <li>
                             <a href="{{ route('system-admin-voters') }}"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Voter</a>
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Acive Voters</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('system-admin-inactivevoters') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Inactive Voters</a>
                         </li>
                         <li>
                             <a href="{{ route('system-admin-designation') }}"
