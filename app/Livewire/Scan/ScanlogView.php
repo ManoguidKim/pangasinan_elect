@@ -12,6 +12,7 @@ class ScanlogView extends Component
     public function render()
     {
         $scanlogs = Scanlog::select(
+            'scanlogs.id',
             'voters.fname',
             'voters.mname',
             'voters.lname',
@@ -36,8 +37,8 @@ class ScanlogView extends Component
         ]);
     }
 
-    public function deleteLog(Scanlog $log)
+    public function deleteLog($logid)
     {
-        $log->delete();
+        Scanlog::where('id', $logid)->delete();
     }
 }
