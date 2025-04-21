@@ -52,9 +52,22 @@ class WithVoterSelectionQrPrint extends Component
             ->first()
             ->image_path;
 
-        $voters = Voter::whereIn('id', $this->checkedVoters)
-            ->orderBy('lname')
+        $voters = Voter::query()
+            ->select([
+                'voters.id',
+                'voters.fname',
+                'voters.lname',
+                'voters.mname',
+                'barangays.name as barangay_name',
+            ])
+            ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
+            ->whereIn('voters.id', $this->checkedVoters)
+            ->orderBy('voters.lname')
+            ->orderBy('voters.fname')
             ->get();
+
+        // dd($voters);
+
 
         // This is not livewire is it posible?
         Session::put('voters', $voters);

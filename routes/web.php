@@ -134,13 +134,8 @@ Route::middleware([
 
 
     // Report Printing
-    Route::get(
-        'system/admin/reports',
-        [
-            ReportController::class,
-            'index'
-        ]
-    )->name('system-admin-reports')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/reports', [ReportController::class, 'index'])->name('system-admin-reports')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/reports/withguiconsulta', [ReportController::class, 'withoutGuiconsultaTagging'])->name('system-admin-reports-withguiconsulta')->middleware(['isAdmin']);
 
     Route::post(
         'system/admin/generate-reports',

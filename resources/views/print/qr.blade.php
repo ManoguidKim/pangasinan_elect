@@ -25,7 +25,6 @@ use chillerlan\QRCode\QROptions;
     <div class="content-wrapper bg-white">
         <div class="content pt-2">
             <div class="container">
-
                 <?php
                 $numOfCols = 2;
                 $rowCount = 0;
@@ -34,16 +33,14 @@ use chillerlan\QRCode\QROptions;
                 <div class="row">
                     <?php
                     foreach ($voters as $row) {
-                        $options = new QROptions(
-                            [
-                                'eccLevel' => QRCode::ECC_H,
-                                'imageBase64' => true,
-                                'logoSpaceHeight' => 0,
-                                'logoSpaceWidth' => 0,
-                                'scale' => 1,
-                                'version' => 2,
-                            ]
-                        );
+                        $options = new QROptions([
+                            'eccLevel' => QRCode::ECC_H,
+                            'imageBase64' => true,
+                            'logoSpaceHeight' => 0,
+                            'logoSpaceWidth' => 0,
+                            'scale' => 2,
+                            'version' => 2,
+                        ]);
                     ?>
                         <div class="col-md-<?php echo $bootstrapColWidth; ?>">
                             <div class="thumbnail">
@@ -51,14 +48,20 @@ use chillerlan\QRCode\QROptions;
                                     <div class="card">
                                         <img src="{{ asset('storage/' . $cardLayout) }}" class="card-img" alt="Card image">
                                         <div class="card-img-overlay">
-                                            <div class="row mt-3">
-                                                <div class="col-md-6 ms-auto">
-                                                    <img src="{{ (new QRCode($options))->render($row->voter_id) }}" class="card-img" alt="QR Code" width="95%" height="95%">
-                                                </div>
-                                            </div>
                                             <div class="row">
-                                                <div class="col">
-                                                    <h6 class="mb-0"><strong>{{ $row->lname . ', ' . $row->fname . ' ' . $row->mname }}</strong></h6>
+                                                <!-- QR Code on the left -->
+                                                <div class="col-md-6 p-0 d-flex align-items-center justify-content-center">
+                                                    <img src="{{ (new QRCode($options))->render($row->voter_id) }}"
+                                                        class="img-fluid w-100 h-100 object-fit-contain" alt="QR Code">
+                                                </div>
+
+                                                <!-- Voter's info on the right -->
+                                                <div class="col-md-6 d-flex flex-column justify-content-center">
+                                                    <div class="text-center pe-2">
+                                                        <h5 class="mb-1 fw-bold">{{ $row->lname }}</h5>
+                                                        <h5 class="mb-1 fw-bold">{{ $row->fname }}</h5>
+                                                        <h6 class="mb-0">{{ $row->barangay_name }}</h6>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,18 +76,16 @@ use chillerlan\QRCode\QROptions;
                     }
                     ?>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         window.onload = function() {
             self.print();
         }
-    </script>
+    </script> -->
 </body>
 
 </html>

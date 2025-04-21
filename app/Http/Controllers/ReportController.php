@@ -361,4 +361,60 @@ class ReportController extends Controller
         $pdf->Output();
         exit;
     }
+
+    public function withoutGuiconsultaTagging()
+    {
+        $voterDetails = Barangay::select('barangays.name')
+
+            // Count voters and their remarks categories
+            ->selectRaw('COUNT(voters.id) as total_voters')
+            ->selectRaw('SUM(voters.remarks = "ally") as ally_count')
+            ->selectRaw('SUM(voters.remarks = "opponent") as opponent_count')
+            ->selectRaw('SUM(voters.remarks = "undecided") as undecided_count')
+
+            // Join with voters and municipalities
+            ->join('voters', 'barangays.id', '=', 'voters.barangay_id')
+            ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
+
+            // Filter by active voters and current user's municipality
+            ->where('barangays.municipality_id', auth()->user()->municipality_id)
+            ->where(function ($query) {
+                $query->where('voters.status', 'Active')
+                    ->whereNull('voters.is_guiconsulta');
+            })
+
+            // Group and order by barangay name
+            ->groupBy('barangays.name')
+            ->orderBy('barangays.name', 'asc')
+            ->get();
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0, 8, "Report - No Guiconsulta Tagging", 0, 1);
+
+        $pdf->Ln();
+        $pdf->SetFont('Arial', 'B', 8);
+
+        // Table Header (no background color)
+        $pdf->Cell(10, 10, '#', 1, 0, 'L');
+        $pdf->Cell(60, 10, 'BARANGAY', 1, 0, 'L');
+        $pdf->Cell(40, 10, 'W/ GUICONSULTA', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'TAGGED OPPONENTS', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'TAGGED UNDECIDED/ALLY', 1, 1, 'C');
+
+        // Table Data
+        $i = 1;
+        $pdf->SetFont('Arial', 'B', 8);
+        foreach ($voterDetails as $detail) {
+            $pdf->Cell(10, 10, $i++, 1, 0, 'L');
+            $pdf->Cell(60, 10, $detail->name, 1, 0, 'L');
+            $pdf->Cell(40, 10, $detail->total_voters, 1, 0, 'C');
+            $pdf->Cell(40, 10, $detail->opponent_count, 1, 0, 'C');
+            $pdf->Cell(40, 10, $detail->ally_count + $detail->undecided_count, 1, 1, 'C');
+        }
+
+        $pdf->Output();
+        exit;
+    }
 }
