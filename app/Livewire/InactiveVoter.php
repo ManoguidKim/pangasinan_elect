@@ -44,6 +44,6 @@ class InactiveVoter extends Component
 
     public function setActive($voterid)
     {
-        Voter::where('id', $voterid)->update(['status' => 'Active']);
+        Voter::where('id', $voterid)->update(['status' => 'Active', 'is_checked' => 1]);
     }
 }
