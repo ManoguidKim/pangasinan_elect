@@ -391,7 +391,7 @@ class ReportController extends Controller
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial', 'B', 14);
-        $pdf->Cell(0, 8, "Report - No Guiconsulta Tagging", 0, 1);
+        $pdf->Cell(0, 8, "Guiconsulta Bayambang Profiled Statistics", 0, 1);
 
         $pdf->Ln();
         $pdf->SetFont('Arial', 'B', 8);
