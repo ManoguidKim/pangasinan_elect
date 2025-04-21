@@ -48,7 +48,8 @@ class ReportController extends Controller
                 ->join('organizations', 'organizations.id', '=', 'voter_organizations.organization_id')
                 ->where('voters.municipality_id', auth()->user()->municipality_id)
                 ->where('voters.barangay_id', $barangay)
-                ->where('voters.status', 'Active');
+                ->where('voters.status', 'Active')
+                ->where('voters.is_checked', 1);
 
             if ($sub_type) {
                 $voters = $voters->where('organizations.id', $sub_type);
@@ -88,7 +89,8 @@ class ReportController extends Controller
                 ->join('designations', 'designations.id', '=', 'voter_designations.designation_id')
                 ->where('voters.municipality_id', auth()->user()->municipality_id)
                 ->where('voters.barangay_id', $barangay)
-                ->where('voters.status', 'Active');
+                ->where('voters.status', 'Active')
+                ->where('voters.is_checked', 1);
 
             if ($sub_type) {
                 $voters->where('designations.id', $sub_type);
@@ -112,7 +114,7 @@ class ReportController extends Controller
             $this->generateReport($voters, $type, $barangay);
         } else {
             $voters = Voter::where('barangay_id', $barangay)
-                ->where('municipality_id', auth()->user()->municipality_id)
+                ->where(['municipality_id' => auth()->user()->municipality_id, 'status' => 'Active', 'is_checked' => 1])
                 ->orderBy('lname')
                 ->get();
 
