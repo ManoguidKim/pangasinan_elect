@@ -104,7 +104,7 @@ class PrintController extends Controller
             $pdf->SetXY($x + 45, $y + 20);
             $pdf->Cell(55, 5, $info->lname . ',', 0, 1, 'L');
 
-            $pdf->SetFont('Arial', 'B', 16);
+            $pdf->SetFont('Arial', 'B', 12);
             $pdf->SetXY($x + 45, $y + 25);
             $pdf->Cell(55, 5, $info->fname, 0, 1, 'L');
 
