@@ -213,6 +213,8 @@ Route::middleware([
     Route::get('system/admin/print-voter-qrs', [PrintController::class, 'printSelection'])->name('system-admin-selection-print-voter-qr')->middleware(['isAdminEncoder']);
     Route::get('system/admin/print-selected-voters', [PrintController::class, 'printSelected'])->name('system-admin-print-selected-voters')->middleware(['isAdminEncoder']);
     Route::post('system/admin/generate-qr', [PrintController::class, 'print'])->name('system-admin-generate-qr')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/generateid', [PrintController::class, 'generateIDs'])->name('system-admin-generateid')->middleware(['isAdminEncoder']);
+
 
     Route::post('system/admin/dynamic-subtype', [DynamicController::class, 'getSubType'])->name('system-admin-dynamic-subtype')->middleware(['isAdminEncoder']);
 

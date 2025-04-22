@@ -430,7 +430,7 @@ class ReportController extends Controller
             ->join('voters', 'barangays.id', '=', 'voters.barangay_id')
             ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
             ->where('barangays.municipality_id', auth()->user()->municipality_id)
-            ->whereIn('barangays.name', ['Idong', 'Tanolong', 'Inanlorenza', 'Maigpa', 'Batangcaoa'])
+            ->whereIn('barangays.name', ['Langiran', 'Macayocayo', 'Beleng', 'Balaybuaya', 'Malimpec'])
             ->where(function ($query) {
                 $query->where('voters.status', 'Active')
                     ->whereNull('voters.is_guiconsulta');
