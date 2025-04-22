@@ -133,7 +133,7 @@ class ReportController extends Controller
                     $pdf = new FPDF();
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
-                    if ($subtype == 'Yes') {
+                    if ($subtype == 'Yes' || $subtype == null) {
                         $pdf->Cell(0, 8, 'Guiconsulta Profiled of ' . $currentBarangay, 0, 1);
                     } else {
                         $pdf->Cell(0, 8, 'Guiconsulta Not Profiled of ' . $currentBarangay, 0, 1);
