@@ -113,7 +113,7 @@
                 }
             });
         } else {
-            $('#sub_type').html('<option value="">Select Sub-Type</option>');
+            $('#sub_type').html('<option value="">Select Sub-Type</option><option value="Guiconsulta - No">Guiconsulta - No</option><option value="Guiconsulta - Yes">Guiconsulta - Yes</option>');
         }
     });
 </script>

@@ -14,12 +14,7 @@ class ReportController extends Controller
     public function index()
     {
         $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
-        return view(
-            'report.index',
-            [
-                'barangays' => $barangays
-            ]
-        );
+        return view('report.index', ['barangays' => $barangays]);
     }
 
 
@@ -113,9 +108,13 @@ class ReportController extends Controller
 
             $this->generateReport($voters, $type, $barangay);
         } else {
+            $sub_type_array = explode('-', $sub_type);
+
+            $isGuiconsulta = trim($sub_type_array[1]) == 'Yes' ? 1 : 0;
             $voters = Voter::where('barangay_id', $barangay)
-                ->where(['municipality_id' => auth()->user()->municipality_id, 'status' => 'Active', 'is_checked' => 1])
+                ->where(['municipality_id' => auth()->user()->municipality_id, 'status' => 'Active', 'is_checked' => 1, 'is_guiconsulta' => $isGuiconsulta])
                 ->orderBy('lname')
+                ->orderByRaw("FIELD(voters.remarks, 'Opponent', 'Ally', 'Undecided')")
                 ->get();
 
             $this->generateReport($voters, $type, $barangay);
@@ -133,24 +132,21 @@ class ReportController extends Controller
                     $pdf = new FPDF();
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
-                    $pdf->Cell(0, 8, 'Active Voters of ' . $currentBarangay, 0, 1);
-                    $pdf->SetFont('Arial', '', 8);
-                    $pdf->Cell(190, 5, 'An active voter is an individual who participates in elections by registering to vote and casting their ballot. This engagement can occur in various forms,', 0, 1, 'L');
-                    $pdf->Cell(190, 5, 'including voting in local, state, and national elections, as well as participating in primaries and referendums. Active voters often stay informed about', 0, 1, 'L');
-                    $pdf->Cell(190, 5, 'political issues, candidates, and policies, reflecting their commitment to civic duty and influence in the democratic process.', 0, 1, 'L');
+                    $pdf->Cell(0, 8, 'Guiconsulta Profiled of ' . $currentBarangay, 0, 1);
 
                     $pdf->ln();
+                    $pdf->SetFont('Arial', 'B', 8);
                     $pdf->Cell(10, 7, '#', 1, 0, 'L');
                     $pdf->Cell(90, 7, 'Name', 1, 0, 'L');
                     $pdf->Cell(60, 7, 'Precinct No.', 1, 0, 'L');
-                    $pdf->Cell(30, 7, 'Status', 1, 1, 'L');
+                    $pdf->Cell(30, 7, 'Tagging', 1, 1, 'L');
 
                     $i = 1;
                     foreach ($data as $voter) {
                         $pdf->Cell(10, 7, $i++, 1, 0, 'L');
                         $pdf->Cell(90, 7, $voter->lname . ', ' . $voter->fname . ' ' . $voter->mname, 1, 0, 'L');
                         $pdf->Cell(60, 7, $voter->precinct_no, 1, 0, 'L');
-                        $pdf->Cell(30, 7, $voter->status, 1, 1, 'L');
+                        $pdf->Cell(30, 7, $voter->remarks, 1, 1, 'L');
                     }
 
                     $pdf->Output();
