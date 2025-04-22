@@ -51,6 +51,7 @@ class PrintController extends Controller
             ->where('voters.barangay_id', $barangay)
             ->where('voters.is_guiconsulta', 'No')
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
+            ->limit(10)
             ->get();
 
         $pdf = new FPDF('P', 'mm', [216, 330]); // Custom size for long bond paper
@@ -58,7 +59,7 @@ class PrintController extends Controller
 
         $startX = 10;
         $startY = 10;
-        $cardWidth = 90;
+        $cardWidth = 95;
         $cardHeight = 55;
         $cardsPerPage = 10; // 5 rows × 2 columns
         $spacingX = 5;
@@ -101,16 +102,16 @@ class PrintController extends Controller
 
             // Insert Name
             $pdf->SetFont('Arial', 'B', 16);
-            $pdf->SetXY($x + 45, $y + 20);
+            $pdf->SetXY($x + 50, $y + 20);
             $pdf->Cell(55, 5, $info->lname . ',', 0, 1, 'L');
 
             $pdf->SetFont('Arial', 'B', 12);
-            $pdf->SetXY($x + 45, $y + 25);
+            $pdf->SetXY($x + 50, $y + 25);
             $pdf->Cell(55, 5, $info->fname, 0, 1, 'L');
 
             // Barangay
             $pdf->SetFont('Arial', '', 10);
-            $pdf->SetXY($x + 45, $y + 30);
+            $pdf->SetXY($x + 50, $y + 30);
             $pdf->Cell(55, 5, $info->barangay_name, 0, 1, 'L');
         }
 
