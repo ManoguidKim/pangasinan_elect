@@ -110,11 +110,11 @@ class ReportController extends Controller
         } else {
             $sub_type_array = explode('-', $sub_type);
 
-            $isGuiconsulta = trim($sub_type_array[1]) == 'Yes' ? '' : 'No';
+            $isGuiconsulta = trim($sub_type_array[1]) == 'Yes' ? NULL : 'No';
             $voters = Voter::where('barangay_id', $barangay)
                 ->where(['municipality_id' => auth()->user()->municipality_id, 'status' => 'Active', 'is_checked' => 1, 'is_guiconsulta' => $isGuiconsulta])
 
-                ->orderByRaw("FIELD(voters.remarks, 'Opponent', 'Ally', 'Undecided')")
+                ->orderByRaw("FIELD(voters.remarks, 'Opponent', 'Undecided', 'Ally')")
                 ->orderBy('lname')
                 ->get();
 
