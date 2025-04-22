@@ -40,7 +40,7 @@
 
     <form action="{{ route('system-admin-generate-qr') }}" method="post" target="_blank">
         @csrf
-        <div class="grid gap-4 mb-6 md:grid-cols-4">
+        <div class="grid gap-4 mb-3 md:grid-cols-2">
             <div>
                 <label for="first_name" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Barangay</label>
                 <select name="barangay" class="bg-gray-50 border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -50,21 +50,6 @@
                     @endforeach
                 </select>
             </div>
-            <div>
-                <label for="last_name" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Type</label>
-                <select name="type" id="type" class="bg-gray-50 border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">Select Type</option>
-                    <option value="Active Voter">Active Voter</option>
-                    <option value="Active Voter of Organization">Active Voter of Organization</option>
-                    <option value="Active Voter of Barangay Staff">Active Voter of Barangay Staff</option>
-                </select>
-            </div>
-            <div>
-                <label for="sub_type" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Sub-Type</label>
-                <select name="sub_type" id="sub_type" class="bg-gray-50 border border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">Select Sub-Type</option>
-                </select>
-            </div>
         </div>
 
         <button type="submit" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
@@ -72,45 +57,3 @@
         </button>
     </form>
 </x-app-layout>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $('#type').on('change', function() {
-        let type = this.value;
-
-        if (!type) {
-            // If no Type is selected, clear the Sub-Type dropdown and return
-            $('#sub_type').html('<option value="">Select Sub-Type</option>');
-            return;
-        }
-
-        $.ajax({
-            url: '{{ route("system-admin-dynamic-subtype") }}',
-            type: "POST",
-            data: {
-                type: type,
-                _token: '{{ csrf_token() }}'
-            },
-            dataType: 'json',
-            success: function(result) {
-                // Check if the result contains the expected 'subtype' data
-                if (result && result.subtype && Array.isArray(result.subtype)) {
-                    // Clear the existing options
-                    $('#sub_type').html('<option value="">Select Sub-Type</option>');
-
-                    // Populate the Sub-Type dropdown with new options
-                    $.each(result.subtype, function(key, value) {
-                        $("#sub_type").append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                } else {
-                    // alert("No sub-types available for the selected type.");
-                }
-            },
-            error: function(xhr, status, error) {
-                // Handle any AJAX errors
-                console.error("AJAX error: " + error);
-                alert("An error occurred while fetching sub-types.");
-            }
-        });
-    });
-</script>

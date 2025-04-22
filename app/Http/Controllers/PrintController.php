@@ -28,12 +28,7 @@ class PrintController extends Controller
     public function index()
     {
         $barangays = Barangay::where('municipality_id', auth()->user()->municipality_id)->get();
-        return view(
-            'print.index',
-            [
-                'barangays' => $barangays
-            ]
-        );
+        return view('print.index', ['barangays' => $barangays]);
     }
 
     public function printSelection()
@@ -49,82 +44,103 @@ class PrintController extends Controller
 
     public function print(Request $request)
     {
-        $barangay               = $request->input('barangay');
-        $type                   = $request->input('type');
-        $sub_type               = $request->input('sub_type');
+        $barangay = $request->input('barangay');
+        $data = Voter::where('barangay_id', $barangay)->get();
 
-        $cardLayout             = CardLayout::where('municipality_id', auth()->user()->municipality_id)->first()->image_path;
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->SetFont('Arial', '', 12);
 
-        if ($type == "Active Voter of Organization") {
+        $startX = 10;
+        $startY = 10;
+        $cardWidth = 90;
+        $cardHeight = 55;
+        $cardsPerPage = 8;
 
-            $voters = Voter::select(
-                'voters.id as voter_id',
-                'voters.fname',
-                'voters.mname',
-                'voters.lname',
-                'voters.precinct_no',
-                'voters.gender',
-                'voters.dob',
-                'voters.status',
-                'voters.remarks',
-                DB::raw("GROUP_CONCAT(organizations.name ORDER BY organizations.name SEPARATOR ', ') as organization_names") // Concatenate organization names
-            )
-                ->join('voter_organizations', 'voter_organizations.voter_id', '=', 'voters.id')
-                ->join('organizations', 'organizations.id', '=', 'voter_organizations.organization_id')
-                ->where([
-                    ['voters.municipality_id', auth()->user()->municipality_id],
-                    ['voters.barangay_id', $barangay],
-                    ['voters.status', 'Active']
-                ]);
+        $positions = []; // To store layout positions
 
-            if ($sub_type) {
-                $voters->where('organizations.id', $sub_type);
+        // -------- FRONT SIDE --------
+        foreach ($data as $index => $info) {
+
+            if ($index % $cardsPerPage == 0) {
+                $pdf->AddPage();
             }
 
-            $voters = $voters->groupBy('voters.id') // Ensures one row per voter
-                ->orderBy('voters.lname', 'ASC')
-                ->get();
+            $x = $startX + ($index % 2) * ($cardWidth + 5);
+            $y = $startY + floor(($index % $cardsPerPage) / 2) * ($cardHeight + 5);
 
-            return view('print.qr', compact('voters', 'cardLayout'));
-        } else if ($type == "Active Voter of Barangay Staff") {
+            // Save position for back layout later
+            // $positions[$index] = ['x' => $x, 'y' => $y];
 
-            $voters = Voter::select(
-                'voters.id as voter_id',
-                'voters.fname',
-                'voters.mname',
-                'voters.lname',
-                'voters.precinct_no',
-                'voters.gender',
-                'voters.dob',
-                'voters.status',
-                'voters.remarks',
-                DB::raw("GROUP_CONCAT(designations.name ORDER BY designations.name SEPARATOR ', ') as designation_names") // Concatenate designation names
-            )
-                ->join('voter_designations', 'voter_designations.voter_id', '=', 'voters.id')
-                ->join('designations', 'designations.id', '=', 'voter_designations.designation_id')
-                ->where([
-                    ['voters.municipality_id', auth()->user()->municipality_id],
-                    ['voters.barangay_id', $barangay],
-                    ['voters.status', 'Active']
-                ]);
+            // Insert background template
+            $backgroundPath = public_path('cardlayout.jpg');
+            $pdf->Image($backgroundPath, $x, $y, $cardWidth, $cardHeight);
 
-            if ($sub_type) {
-                $voters->where('designations.id', $sub_type);
+            // Generate QR code
+            $renderer = new ImageRenderer(new RendererStyle(150), new ImagickImageBackEnd());
+            $writer = new Writer($renderer);
+            $qrImage = $writer->writeString($info->id);
+
+            $qrTempPath = storage_path("app/public/qr_$index.png");
+            file_put_contents($qrTempPath, $qrImage);
+
+            $image = imagecreatefrompng($qrTempPath);
+            if ($image) {
+                $rgbPath = storage_path("app/public/qr_rgb_$index.png");
+                imagepng($image, $rgbPath);
+                imagedestroy($image);
+            } else {
+                throw new \Exception("Failed to convert QR image for FPDF");
             }
 
-            $voters = $voters->groupBy('voters.id') // Ensures one row per voter
-                ->orderBy('voters.lname', 'ASC')
-                ->get();
+            // Insert QR Code
+            $pdf->Image($rgbPath, $x + 2, $y + 1, 40, 40);
 
-            return view('print.qr', compact('voters', 'cardLayout'));
-        } else {
-            $voters = Voter::where('barangay_id', $barangay)
-                ->where('municipality_id', auth()->user()->municipality_id)
-                ->orderBy('lname')
-                ->get();
+            // Insert Name
+            $pdf->SetFont('Arial', 'B', 16);
+            $pdf->SetXY($x + 45, $y + 20);
+            $pdf->MultiCell(55, 5, $info->lname . ',', 0, 'L');
 
-            return view('print.qr', compact('voters', 'cardLayout'));
+            // Insert Name
+            $pdf->SetFont('Arial', 'B', 16);
+            $pdf->SetXY($x + 45, $y + 25);
+            $pdf->MultiCell(55, 5, $info->fname, 0, 'L');
+
+            // Insert Barangay
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->SetXY($x + 45, $y + 30);
+            $pdf->Cell(55, 5, 'Barangay', 0, 'L');
         }
+
+        // // -------- BACK SIDE --------
+        // foreach ($data as $index => $info) {
+
+        //     if ($index % $cardsPerPage == 0) {
+        //         $pdf->AddPage();
+        //     }
+
+        //     $x = $positions[$index]['x'];
+        //     $y = $positions[$index]['y'];
+
+        //     // Insert back layout
+        //     $backLayoutPath = public_path('back_qr.jpg');
+        //     $pdf->Image($backLayoutPath, $x, $y, $cardWidth, $cardHeight);
+
+        //     // (Optional) Add back content like address, contact, etc.
+        //     $pdf->SetFont('Arial', '', 8);
+        //     $pdf->SetXY($x + 10, $y + 40);
+        //     $pdf->Cell(70, 5, 'This is the back side of the card.', 0, 'C');
+        // }
+
+        // -------- Clean up temp QR images --------
+        for ($i = 0; $i < count($data); $i++) {
+            @unlink(storage_path("app/public/qr_$i.png"));
+            @unlink(storage_path("app/public/qr_rgb_$i.png"));
+        }
+
+        // -------- Return the PDF --------
+        return response($pdf->Output('S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="generated_ids.pdf"');
     }
 
     public function printSelected()
@@ -236,7 +252,7 @@ class PrintController extends Controller
             }
 
             // Insert QR Code
-            $pdf->Image($rgbPath, $x + 2, $y + 1, 38, 38);
+            $pdf->Image($rgbPath, $x + 2, $y + 1, 40, 40);
 
             // Insert Name
             $pdf->SetFont('Arial', 'B', 16);
