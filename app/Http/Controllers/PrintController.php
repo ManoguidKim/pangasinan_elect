@@ -51,6 +51,7 @@ class PrintController extends Controller
             ->where('voters.barangay_id', $barangay)
             ->where('voters.is_guiconsulta', 'No')
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
+            ->orderBy('voters.lname')
             ->get();
 
         $pdf = new FPDF('P', 'mm', [216, 330]); // Custom size for long bond paper
