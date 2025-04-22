@@ -113,15 +113,16 @@ class ReportController extends Controller
             $isGuiconsulta = trim($sub_type_array[1]) == 'Yes' ? '' : 'No';
             $voters = Voter::where('barangay_id', $barangay)
                 ->where(['municipality_id' => auth()->user()->municipality_id, 'status' => 'Active', 'is_checked' => 1, 'is_guiconsulta' => $isGuiconsulta])
-                ->orderBy('lname')
+
                 ->orderByRaw("FIELD(voters.remarks, 'Opponent', 'Ally', 'Undecided')")
+                ->orderBy('lname')
                 ->get();
 
-            $this->generateReport($voters, $type, $barangay);
+            $this->generateReport($voters, $type, $barangay, $isGuiconsulta);
         }
     }
 
-    private function generateReport($data, $type, $barangay)
+    private function generateReport($data, $type, $barangay, $subtype = null)
     {
         if (!empty($barangay) && !empty($type)) {
 
@@ -132,7 +133,11 @@ class ReportController extends Controller
                     $pdf = new FPDF();
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
-                    $pdf->Cell(0, 8, 'Guiconsulta Profiled of ' . $currentBarangay, 0, 1);
+                    if ($subtype == 'Yes') {
+                        $pdf->Cell(0, 8, 'Guiconsulta Profiled of ' . $currentBarangay, 0, 1);
+                    } else {
+                        $pdf->Cell(0, 8, 'Guiconsulta Not Profiled of ' . $currentBarangay, 0, 1);
+                    }
 
                     $pdf->ln();
                     $pdf->SetFont('Arial', 'B', 8);
