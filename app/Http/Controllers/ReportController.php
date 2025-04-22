@@ -417,4 +417,67 @@ class ReportController extends Controller
         $pdf->Output();
         exit;
     }
+
+    public function withoutGuiconsultaBayambangProfiledPerBarangay()
+    {
+        $groupedVoters = Barangay::select(
+            'barangays.name as barangay_name',
+            'voters.fname',
+            'voters.lname',
+            'voters.precinct_no',
+            'voters.remarks'
+        )
+            ->join('voters', 'barangays.id', '=', 'voters.barangay_id')
+            ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
+            ->where('barangays.municipality_id', auth()->user()->municipality_id)
+            ->whereIn('barangays.name', ['Idong', 'Tanolong', 'Inanlorenza', 'Maigpa', 'Batangcaoa'])
+            ->where(function ($query) {
+                $query->where('voters.status', 'Active')
+                    ->whereNull('voters.is_guiconsulta');
+            })
+            ->orderBy('barangays.name')
+            ->orderByRaw("FIELD(voters.remarks, 'Opponent', 'Ally', 'Undecided')")
+            ->orderBy('voters.lname')
+            ->orderBy('voters.fname')
+            ->orderBy('voters.precinct_no')
+
+            ->get()
+            ->groupBy('barangay_name');
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0, 10, "Guiconsulta Profiled in Bayambang", 0, 1, 'C');
+        $pdf->Ln(5);
+
+        foreach ($groupedVoters as $barangay => $voters) {
+            // Barangay Header
+            $pdf->SetFont('Arial', 'B', 12);
+            $pdf->Cell(0, 10, "Barangay: " . $barangay, 0, 1);
+
+            // Table Header
+            $pdf->SetFont('Arial', 'B', 9);
+            $pdf->Cell(10, 8, '#', 1, 0, 'C');
+            $pdf->Cell(80, 8, 'Name', 1, 0, 'L');
+            $pdf->Cell(40, 8, 'Precinct', 1, 0, 'C');
+            $pdf->Cell(40, 8, '', 1, 1, 'C');
+
+            // Table Data
+            $pdf->SetFont('Arial', '', 9);
+            $i = 1;
+            foreach ($voters as $voter) {
+                $fullName = $voter->lname . ', ' . $voter->fname;
+                $pdf->Cell(10, 8, $i++, 1, 0, 'C');
+                $pdf->Cell(80, 8, $fullName, 1, 0, 'L');
+                $pdf->Cell(40, 8, $voter->precinct_no, 1, 0, 'C');
+                $pdf->Cell(40, 8, $voter->remarks, 1, 1, 'C');
+            }
+
+            $pdf->Ln(5);
+        }
+
+        $pdf->Output();
+        exit;
+    }
 }
