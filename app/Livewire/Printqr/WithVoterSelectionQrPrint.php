@@ -47,11 +47,9 @@ class WithVoterSelectionQrPrint extends Component
 
     public function printSelected()
     {
-
-        $cardLayout = CardLayout::where('municipality_id', auth()->user()->municipality_id)
-            ->first()
-            ->image_path;
-
+        // $cardLayout = CardLayout::where('municipality_id', auth()->user()->municipality_id)
+        //     ->first()
+        //     ->image_path;
         $voters = Voter::query()
             ->select([
                 'voters.id',
@@ -61,6 +59,9 @@ class WithVoterSelectionQrPrint extends Component
                 'barangays.name as barangay_name',
             ])
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
+            ->where('voters.is_guiconsulta', 'No')
+            ->whereIn('voters.remarks', ['Ally', 'Undecided'])
+            ->orderBy('voters.lname')
             ->whereIn('voters.id', $this->checkedVoters)
             ->orderBy('voters.lname')
             ->orderBy('voters.fname')
@@ -71,7 +72,7 @@ class WithVoterSelectionQrPrint extends Component
 
         // This is not livewire is it posible?
         Session::put('voters', $voters);
-        Session::put('card', $cardLayout);
+        // Session::put('card', $cardLayout);
 
         return redirect()->route('system-admin-print-selected-voters');
     }
