@@ -14,8 +14,8 @@ class DashboardLivewire extends Component
     public function render()
     {
 
-        $activeVoter = Voter::where(['status' => 'Active', 'municipality_id' => auth()->user()->municipality_id])->count();
-        $voterTaggedAlly = Voter::where(['status' => 'Active', 'remarks' => 'Ally', 'municipality_id' => auth()->user()->municipality_id])->count();
+        $activeVoter = Voter::where(['is_checked' => '1', 'status' => 'Active', 'municipality_id' => auth()->user()->municipality_id])->count();
+        $voterTaggedAlly = Voter::where(['is_checked' => '1', 'status' => 'Active', 'remarks' => 'Ally', 'municipality_id' => auth()->user()->municipality_id])->count();
 
 
         // Gender
@@ -23,7 +23,7 @@ class DashboardLivewire extends Component
             SUM(CASE WHEN gender = 'male' THEN 1 ELSE 0 END) as male_count,
             SUM(CASE WHEN gender = 'female' THEN 1 ELSE 0 END) as female_count
         ")
-            ->where('municipality_id', auth()->user()->municipality_id)
+            ->where(['municipality_id' => auth()->user()->municipality_id, 'is_checked' => '1', 'status' => 'Active'])
             ->first();
 
 
@@ -35,6 +35,7 @@ class DashboardLivewire extends Component
         ")
             ->where('municipality_id', auth()->user()->municipality_id)
             ->where('status', 'Active')
+            ->where('is_checked', '1')
             ->first();
 
 
@@ -48,6 +49,7 @@ class DashboardLivewire extends Component
         ")
             ->leftJoin('voters', 'barangays.id', '=', 'voters.barangay_id')
             ->where('barangays.municipality_id', auth()->user()->municipality_id)
+            ->where(['is_checked' => '1', 'status' => 'Active'])
             ->groupBy('barangays.name')
             ->orderBy('barangays.name')
             ->get();

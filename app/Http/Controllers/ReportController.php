@@ -134,9 +134,9 @@ class ReportController extends Controller
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
                     if ($subtype == 'Yes' || $subtype == null) {
-                        $pdf->Cell(0, 8, 'Guiconsulta Profiled of ' . $currentBarangay, 0, 1);
+                        $pdf->Cell(0, 8, 'Guiconsulta Profiled of Barangay ' . $currentBarangay, 0, 1);
                     } else {
-                        $pdf->Cell(0, 8, 'Guiconsulta Not Profiled of ' . $currentBarangay, 0, 1);
+                        $pdf->Cell(0, 8, 'Guiconsulta Not Profiled of Barangay' . $currentBarangay, 0, 1);
                     }
 
                     $pdf->ln();
@@ -397,23 +397,41 @@ class ReportController extends Controller
         $pdf->Ln();
         $pdf->SetFont('Arial', 'B', 8);
 
+        $total = 0;
+        $totalAlly = 0;
+        $totalOpponent = 0;
+        $totalUndecided = 0;
+
         // Table Header (no background color)
         $pdf->Cell(10, 10, '#', 1, 0, 'L');
-        $pdf->Cell(60, 10, 'BARANGAY', 1, 0, 'L');
-        $pdf->Cell(40, 10, 'W/ GUICONSULTA', 1, 0, 'C');
-        $pdf->Cell(40, 10, 'TAGGED OPPONENTS', 1, 0, 'C');
-        $pdf->Cell(40, 10, 'TAGGED UNDECIDED/ALLY', 1, 1, 'C');
+        $pdf->Cell(50, 10, 'BARANGAY', 1, 0, 'L');
+        $pdf->Cell(40, 10, 'TOTAL PROFILED', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'ALLY', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'OPPONENTS', 1, 0, 'C');
+        $pdf->Cell(30, 10, 'UNDECIDED', 1, 1, 'C');
 
         // Table Data
         $i = 1;
         $pdf->SetFont('Arial', 'B', 8);
         foreach ($voterDetails as $detail) {
             $pdf->Cell(10, 10, $i++, 1, 0, 'L');
-            $pdf->Cell(60, 10, $detail->name, 1, 0, 'L');
+            $pdf->Cell(50, 10, $detail->name, 1, 0, 'L');
             $pdf->Cell(40, 10, $detail->total_voters, 1, 0, 'C');
-            $pdf->Cell(40, 10, $detail->opponent_count, 1, 0, 'C');
-            $pdf->Cell(40, 10, $detail->ally_count + $detail->undecided_count, 1, 1, 'C');
+            $pdf->Cell(30, 10, $detail->ally_count, 1, 0, 'C');
+            $pdf->Cell(30, 10, $detail->opponent_count, 1, 0, 'C');
+            $pdf->Cell(30, 10, $detail->undecided_count, 1, 1, 'C');
+
+            $total += $detail->total_voters;
+            $totalAlly += $detail->ally_count;
+            $totalOpponent += $detail->opponent_count;
+            $totalUndecided += $detail->undecided_count;
         }
+        $pdf->Cell(10, 10, '', 1, 0, 'L');
+        $pdf->Cell(50, 10, 'Total =', 1, 0, 'L');
+        $pdf->Cell(40, 10, number_format($total), 1, 0, 'C');
+        $pdf->Cell(30, 10, number_format($totalAlly), 1, 0, 'C');
+        $pdf->Cell(30, 10, number_format($totalOpponent), 1, 0, 'C');
+        $pdf->Cell(30, 10, number_format($totalUndecided), 1, 1, 'C');
 
         $pdf->Output();
         exit;
