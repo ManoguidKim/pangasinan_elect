@@ -48,7 +48,9 @@ class PrintController extends Controller
         $data = Voter::query()
             ->select('voters.id', 'voters.lname', 'voters.fname', 'barangays.name as barangay_name')
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
-            ->where('voters.barangay_id', $barangay)->limit(10)
+            ->where('voters.barangay_id', $barangay)
+            ->where('voters.is_guiconsulta', 'No')
+            ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->get();
 
         $pdf = new FPDF('P', 'mm', [216, 330]); // Custom size for long bond paper
