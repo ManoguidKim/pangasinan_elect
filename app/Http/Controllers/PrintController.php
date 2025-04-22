@@ -49,6 +49,9 @@ class PrintController extends Controller
             ->select('voters.id', 'voters.lname', 'voters.fname', 'barangays.name as barangay_name')
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
             ->where('voters.barangay_id', $barangay)
+
+            ->where('voters.is_checked', 1)
+            ->where('voters.status', 'Active')
             ->where('voters.is_guiconsulta', 'No')
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->orderBy('voters.lname')
