@@ -14,8 +14,8 @@ class ProfiledAndNotPerBarangay extends Component
     {
         $voters = Barangay::select(
             'barangays.name as barangay_name',
-            DB::raw("SUM(CASE WHEN is_guiconsulta = 1 THEN 1 ELSE 0 END) as total_yes"),
-            DB::raw("SUM(CASE WHEN is_guiconsulta = 0 THEN 1 ELSE 0 END) as total_no")
+            DB::raw("SUM(CASE WHEN is_guiconsulta IS NULL OR is_guiconsulta = '' THEN 1 ELSE 0 END) as total_yes"),
+            DB::raw("SUM(CASE WHEN is_guiconsulta = 'No' THEN 1 ELSE 0 END) as total_no")
         )
             ->join('voters', 'barangays.id', '=', 'voters.barangay_id')
             ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
@@ -28,6 +28,7 @@ class ProfiledAndNotPerBarangay extends Component
             ->groupBy('barangays.name')
             ->orderBy('barangays.name')
             ->get();
+
 
         return view('livewire.guiconsulta.profiled-and-not-per-barangay', ['voters' => $voters]);
     }
