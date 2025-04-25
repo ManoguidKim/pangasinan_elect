@@ -28,6 +28,7 @@ use App\Livewire\Camera\ImageCapture;
 use App\Livewire\DashboardLivewire;
 use App\Livewire\DesignationLivewire;
 use App\Livewire\Faction\VoterFactionLivewire;
+use App\Livewire\Guiconsulta\ProfiledAndNotPerBarangay;
 use App\Livewire\InactiveVoter;
 use App\Livewire\LogsLivewire;
 use App\Livewire\OrganizationLivewire;
@@ -315,4 +316,8 @@ Route::middleware([
     // LOG
     Route::get('system/admin/log/municipalities', [LogsController::class, 'adminLog'])->name('system-admin-log-municipalities')->middleware(['isSuperAdmin']);
     Route::get('system/admin/log/municipalities/show/{municipality}', [LogsController::class, 'showAdminLog'])->name('system-admin-log-municipalities-show')->middleware(['isSuperAdmin']);
+
+
+    // Guiconsulta
+    Route::get('system/guiconsulta/voter-profile', ProfiledAndNotPerBarangay::class)->name('system-guiconsulta-voter-profile')->middleware(['isAdmin']);
 });
