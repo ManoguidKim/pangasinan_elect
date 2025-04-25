@@ -20,6 +20,7 @@ class ProfiledAndNotPerBarangay extends Component
             ->join('voters', 'barangays.id', '=', 'voters.barangay_id')
             ->join('municipalities', 'municipalities.id', '=', 'barangays.municipality_id')
             ->where('voters.status', 'Active')
+            ->where('voters.is_checked', 1)
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->where('municipalities.id', auth()->user()->municipality_id)
             ->when($this->search, function ($query) {
