@@ -211,10 +211,18 @@ Route::middleware([
     Route::post('system/validator/save-capture-image/{voter}', [CaptureImageController::class, 'updateVoterImage'])->name('system-validator-save-capture-image')->middleware(['isAdminValidator']);
 
     Route::get('system/admin/print-voter-qr', [PrintController::class, 'index'])->name('system-admin-print-voter-qr')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/print-pinoy-worker-voter-qr', [PrintController::class, 'pinoyworker'])->name('system-admin-print-pw-voter-qr')->middleware(['isAdmin']);
+    Route::post('system/admin/generate-pw-qr', [PrintController::class, 'printQrcodeForPinotWorker'])->name('system-admin-generate-pw-qr')->middleware(['isAdmin']);
+
     Route::get('system/admin/print-voter-qrs', [PrintController::class, 'printSelection'])->name('system-admin-selection-print-voter-qr')->middleware(['isAdminEncoder']);
+
+
     Route::get('system/admin/print-selected-voters', [PrintController::class, 'printSelected'])->name('system-admin-print-selected-voters')->middleware(['isAdminEncoder']);
     Route::post('system/admin/generate-qr', [PrintController::class, 'print'])->name('system-admin-generate-qr')->middleware(['isAdminEncoder']);
     Route::get('system/admin/generateid', [PrintController::class, 'generateIDs'])->name('system-admin-generateid')->middleware(['isAdminEncoder']);
+    Route::get('system/admin/generate/pinoyworkerqr', [PrintController::class, 'printQrcodeForPinotWorker'])->name('system-admin-generate-pinoyworkerqr')->middleware(['isAdminEncoder']);
+
+
 
 
     Route::post('system/admin/dynamic-subtype', [DynamicController::class, 'getSubType'])->name('system-admin-dynamic-subtype')->middleware(['isAdminEncoder']);
