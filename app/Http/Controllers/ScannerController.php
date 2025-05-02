@@ -13,6 +13,11 @@ class ScannerController extends Controller
         return view('scanner.index');
     }
 
+    public function selectEvent()
+    {
+        return view('scanner.index');
+    }
+
     public function show(Request $request)
     {
 

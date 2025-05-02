@@ -41,7 +41,7 @@
                     <a href="https://flowbite.com" class="flex ms-2 md:me-24">
                         <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" /> -->
                         <span
-                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-900">Election Support Monitoring System</span>
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white text-gray-900">TQS</span>
                     </a>
                 </div>
                 <div class="flex items-center">
@@ -320,6 +320,11 @@
                             <a href="{{ route('system-admin-accounts') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Account</a>
                         </li>
+
+                        <li>
+                            <a href="{{ route('system-admin-event') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Event</a>
+                        </li>
                         @endif
                     </ul>
                 </li>
@@ -340,7 +345,7 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="printing-dropdown" class="py-2 space-y-2">
+                    <ul id="printing-dropdown" class="hidden py-2 space-y-2">
                         <li>
                             <a href="{{ route('system-admin-print-voter-qr') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Without Selection</a>
@@ -390,7 +395,7 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="report-dropdown" class=" py-2 space-y-2">
+                    <ul id="report-dropdown" class="hidden py-2 space-y-2">
                         <li>
                             <a href="{{ route('system-admin-reports') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Voter Report</a>
@@ -423,7 +428,7 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="logs-dropdown" class=" py-2 space-y-2">
+                    <ul id="logs-dropdown" class="hidden py-2 space-y-2">
                         <!-- <li>
                             <a href="{{ route('system-admin-logs') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Activity Logs</a>

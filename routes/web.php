@@ -6,6 +6,7 @@ use App\Http\Controllers\CardLayoutController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\DynamicController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrganizationController;
@@ -203,6 +204,7 @@ Route::middleware([
 
     // Controllers here...
 
+    Route::get('admin/scanner/event', [ScannerController::class, 'selectEvent'])->name('admin-scanner-event')->middleware(['isAdminScanner']);
     Route::get('admin/scanner', [ScannerController::class, 'index'])->name('admin-scanner')->middleware(['isAdminScanner']);
     Route::post('admin/scanner-result', [ScannerController::class, 'show'])->name('admin-scanner-result')->middleware(['isAdminScanner']);
 
@@ -328,4 +330,7 @@ Route::middleware([
 
     // Guiconsulta
     Route::get('system/guiconsulta/voter-profile', ProfiledAndNotPerBarangay::class)->name('system-guiconsulta-voter-profile')->middleware(['isAdmin']);
+
+    // Event
+    Route::get('system/admin/event', [EventController::class, 'index'])->name('system-admin-event')->middleware(['isAdmin']);
 });
