@@ -205,7 +205,11 @@ Route::middleware([
     // Controllers here...
 
     Route::get('admin/scanner/event', [ScannerController::class, 'selectEvent'])->name('admin-scanner-event')->middleware(['isAdminScanner']);
-    Route::post('admin/scanner', [ScannerController::class, 'index'])->name('admin-scanner')->middleware(['isAdminScanner']);
+
+    Route::match(['get', 'post'], 'admin/scanner', [ScannerController::class, 'index'])
+        ->name('admin-scanner')
+        ->middleware(['isAdminScanner']);
+
     Route::post('admin/scanner-result', [ScannerController::class, 'show'])->name('admin-scanner-result')->middleware(['isAdminScanner']);
 
     Route::get('system/validator/capture-image/{voter}', [CaptureImageController::class, 'showCamera'])->name('system-validator-capture-image')->middleware(['isAdminValidator']);

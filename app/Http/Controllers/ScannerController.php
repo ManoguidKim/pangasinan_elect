@@ -12,7 +12,10 @@ class ScannerController extends Controller
 {
     public function index(Request $request)
     {
-        Session::put('event', $request->event);
+        if ($request->has('event')) {
+            Session::put('event', $request->event);
+        }
+
         return view('scanner.index');
     }
 
@@ -47,10 +50,12 @@ class ScannerController extends Controller
             return redirect()->route('admin-scanner')->with('error', 'This QR code card has already been scanned.');
         }
 
+        $eventId = Session::get('event');
+
         $scanLog = new ScanLog();
         $scanLog->voter_id = $voterId;
         $scanLog->user_id = auth()->user()->id;
-        $scanLog->event_id = Session::get('event');
+        $scanLog->event_id = $eventId;
         $scanLog->save();
 
         return redirect()->route('admin-scanner')->with('message', 'QR code scanned successfully!');
