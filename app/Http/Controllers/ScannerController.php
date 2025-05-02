@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Scanlog;
 use App\Models\Voter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ScannerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        Session::put('event', $request->event);
         return view('scanner.index');
     }
 
     public function selectEvent()
     {
-        return view('scanner.index');
+        $events = Event::all();
+        return view('scanner.selectevent', ['events' => $events]);
     }
 
     public function show(Request $request)
@@ -46,6 +50,7 @@ class ScannerController extends Controller
         $scanLog = new ScanLog();
         $scanLog->voter_id = $voterId;
         $scanLog->user_id = auth()->user()->id;
+        $scanLog->event_id = Session::get('event');
         $scanLog->save();
 
         return redirect()->route('admin-scanner')->with('message', 'QR code scanned successfully!');

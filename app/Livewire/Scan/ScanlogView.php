@@ -17,6 +17,7 @@ class ScanlogView extends Component
             'voters.mname',
             'voters.lname',
             'voters.suffix',
+            'events.name as event_name',
             'barangays.name as barangay_name',
             'users.name as user_name',
             'scanlogs.created_at'
@@ -24,6 +25,8 @@ class ScanlogView extends Component
             ->join('voters', 'voters.id', '=', 'scanlogs.voter_id')
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
             ->join('users', 'users.id', '=', 'scanlogs.user_id')
+            ->join('event', 'event.id', '=', 'scanlogs.event_id')
+
             ->where('voters.municipality_id', auth()->user()->municipality_id)
             ->where(function ($query) {
                 $query->where('voters.lname', 'like', '%' . $this->search . '%')
