@@ -62,9 +62,9 @@
                     <option value="Admin">Admin</option>
                     @else
                     <option value="">Select User Role</option>
-                    <option value="Admin">Admin</option>
+                    <!-- <option value="Admin">Admin</option>
                     <option value="Encoder">Encoder</option>
-                    <option value="Validator">Validator</option>
+                    <option value="Validator">Validator</option> -->
                     <option value="Scanner">Scanner</option>
                     @endif
                 </select>

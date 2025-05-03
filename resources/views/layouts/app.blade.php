@@ -310,7 +310,7 @@
                             <a href="{{ route('system-admin-organization') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Organization</a>
                         </li>
-                        @if(auth()->user()->role == 'Admin')
+                        @if(auth()->user()->role == 'Admin' || auth()->user()->role == 'Encoder')
                         <li>
                             <a href="{{ route('system-admin-barangay-list') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Barangay</a>
