@@ -34,20 +34,53 @@
 
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
+        const html5QrCode = new Html5Qrcode("reader");
+        let hasScanned = false; // prevent multiple scans
+
         function onScanSuccess(decodedText, decodedResult) {
+            if (hasScanned) return; // prevent duplicate handling
+
+            hasScanned = true; // lock scanning
+            console.log("QR code scanned:", decodedText);
+
+            // Stop the scanner
+            html5QrCode.stop().then(() => {
+                console.log("Scanner stopped.");
+            }).catch(err => {
+                console.error("Error stopping scanner:", err);
+            });
+
+            // Set the input and show a message (optional)
             document.getElementById("id").value = decodedText;
-            document.getElementById("btnValidate").click();
+            showProcessingMessage(); // optional feedback
+
+            // Delay the form submission by 1 second
+            setTimeout(() => {
+                document.getElementById("btnValidate").click();
+            }, 1000);
         }
 
-        const html5QrCode = new Html5Qrcode("reader");
+        function showProcessingMessage() {
+            const message = document.createElement("div");
+            message.innerText = "Processing QR code...";
+            message.className = "text-blue-600 font-semibold mt-4";
+            document.querySelector("#reader").appendChild(message);
+        }
+
         Html5Qrcode.getCameras().then(cameras => {
-            if (cameras.length) {
+            if (cameras.length > 1) {
                 html5QrCode.start(
                     cameras[1].id, {
                         fps: 20,
                         qrbox: 500
-                    },
-                    onScanSuccess
+                    }, onScanSuccess
+                );
+            } else if (cameras.length > 0) {
+                html5QrCode.start(
+                    cameras[1].id, {
+                        fps: 20,
+                        qrbox: 500
+                    }, onScanSuccess
                 );
             } else {
                 alert("No camera found.");
