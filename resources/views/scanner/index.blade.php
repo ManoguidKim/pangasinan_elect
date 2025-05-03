@@ -29,7 +29,7 @@
 
         <!-- Video element for QR code scanning -->
         <div id="reader" style="width:300px;"></div>
-        <input type="hidden" id="id">
+        <!-- <input type="text" id="id"> -->
     </div>
 
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -43,9 +43,9 @@
         Html5Qrcode.getCameras().then(cameras => {
             if (cameras.length) {
                 html5QrCode.start(
-                    cameras[0].id, {
-                        fps: 10,
-                        qrbox: 250
+                    cameras[1].id, {
+                        fps: 20,
+                        qrbox: 500
                     },
                     onScanSuccess
                 );
@@ -61,7 +61,7 @@
         @csrf
         <div class="form-group">
             <small class="text-info">Control No.</small>
-            <input type="text" name="voterid" id="id" class="form-control text-center" readonly>
+            <input type="text" name="voterid" id="id" class="form-control text-center">
         </div>
         <input type="submit" id="btnValidate" name="btnValidate" value="Check Validity" class="btn btn-info btn-sm btn-block">
     </form>

@@ -28,6 +28,8 @@ class ScannerController extends Controller
     public function show(Request $request)
     {
 
+        // dd($request->voterid);
+
         date_default_timezone_set('Asia/Manila');
 
         $scannerMunicipalityID = auth()->user()->municipality_id;
