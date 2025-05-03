@@ -293,8 +293,8 @@ Route::middleware([
 
 
     // User
-    Route::get('system/admin/user/create', [UserController::class, 'create'])->name('system-admin-user-create')->middleware(['isSuperAdminAdmin']);
-    Route::post('system/admin/user/create', [UserController::class, 'store'])->name('system-admin-user-create')->middleware(['isSuperAdminAdmin']);
+    Route::get('system/admin/user/create', [UserController::class, 'create'])->name('system-admin-user-create');
+    Route::post('system/admin/user/create', [UserController::class, 'store'])->name('system-admin-user-create');
 
 
 
