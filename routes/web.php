@@ -105,7 +105,7 @@ Route::middleware([
     // Organization
     Route::get('system/admin/organizations', OrganizationLivewire::class)->name('system-admin-organization')->middleware(['isAdminEncoder']);
     // Account
-    Route::get('system/admin/user', AccountLivewire::class)->name('system-admin-accounts')->middleware(['isSuperAdminAdmin']);;
+    Route::get('system/admin/user', AccountLivewire::class)->name('system-admin-accounts');
     // Logs
     Route::get('system/admin/logs', LogsLivewire::class)->name('system-admin-logs')->middleware(['isAdmin']);
 
