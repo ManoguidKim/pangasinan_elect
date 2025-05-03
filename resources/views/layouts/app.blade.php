@@ -476,7 +476,7 @@
                 </li>
                 @endif
 
-                @if (auth()->user()->role == 'Scanner' || auth()->user()->role == 'Admin')
+                @if (auth()->user()->role == 'Scanner' || auth()->user()->role == 'Admin' || auth()->user()->role == 'Encoder')
 
                 <li>
                     <a href="{{ route('admin-scanner-event') }}"
