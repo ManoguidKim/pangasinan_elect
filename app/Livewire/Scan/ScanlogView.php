@@ -25,7 +25,7 @@ class ScanlogView extends Component
             ->join('voters', 'voters.id', '=', 'scanlogs.voter_id')
             ->join('barangays', 'barangays.id', '=', 'voters.barangay_id')
             ->join('users', 'users.id', '=', 'scanlogs.user_id')
-            ->join('event', 'event.id', '=', 'scanlogs.event_id')
+            ->join('events', 'events.id', '=', 'scanlogs.event_id')
 
             ->where('voters.municipality_id', auth()->user()->municipality_id)
             ->where(function ($query) {
