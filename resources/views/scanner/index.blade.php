@@ -28,33 +28,32 @@
         <h3 class="text-xl font-semibold text-center mb-4">QR Code Scanner</h3>
 
         <!-- Video element for QR code scanning -->
-        <video id="preview" autoplay></video>
-
-        <!-- Result display -->
-        <div id="result" class="mt-4 text-lg"></div>
+        <div id="reader" style="width:300px;"></div>
+        <input type="hidden" id="id">
     </div>
 
-    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-    <script type="text/javascript">
-        let scanner = new Instascan.Scanner({
-            video: document.getElementById('preview'),
-            scanPeriod: 5,
-            mirror: false
-        });
-
-        scanner.addListener('scan', function(content) {
-            document.getElementById("id").value = content;
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById("id").value = decodedText;
             document.getElementById("btnValidate").click();
-        });
+        }
 
-        Instascan.Camera.getCameras().then(function(cameras) {
-            if (cameras.length > 0) {
-                scanner.start(cameras[0]);
+        const html5QrCode = new Html5Qrcode("reader");
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras.length) {
+                html5QrCode.start(
+                    cameras[0].id, {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    onScanSuccess
+                );
             } else {
-                console.error('No cameras found..');
+                alert("No camera found.");
             }
-        }).catch(function(e) {
-            alert(e);
+        }).catch(err => {
+            alert("Camera error: " + err);
         });
     </script>
 
