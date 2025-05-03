@@ -72,7 +72,7 @@
                 html5QrCode.start(
                     cameras[1].id, {
                         fps: 20,
-                        qrbox: 500
+                        qrbox: 250
                     }, onScanSuccess
                 );
             } else if (cameras.length > 0) {
