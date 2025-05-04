@@ -73,6 +73,26 @@
 
             </div>
         </div>
+
+
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="w-full">
+            <div class="max-full p-6 bg-yellow-100 border border-dashed border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 flex items-center">
+                <div class="flex-1">
+                    <a href="#">
+                        <h6 class="mb-2 text-2xl font-semibold tracking-tight text-gray-600 dark:text-white uppercase">Scanned / Distributed Qr</h6>
+                    </a>
+                    <p class="mb-3 font-normal text-gray-500 dark:text-gray-400"></p>
+                    <a href="#" class="inline-flex font-medium items-center text-blue-600 hover:underline">
+                        Click to view details
+                    </a>
+                </div>
+                <h6 class="mb-2 text-4xl font-semibold tracking-tight text-gray-600 dark:text-white">{{ number_format($scannedVoter->total_scans) }} / {{ number_format($distributedQr) }}</h6>
+
+            </div>
+        </div>
     </div>
 
 

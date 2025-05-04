@@ -70,7 +70,11 @@ class DashboardLivewire extends Component
     ")
             ->leftJoin('scanlogs', 'scanlogs.voter_id', '=', 'voters.id')
             ->where('voters.municipality_id', auth()->user()->municipality_id)
+            ->whereIn('voters.remarks', ['Ally', 'Undecided'])
+            ->where('voters.status', 'Active')
+            ->where('voters.is_guiconsulta', 'No')
             ->first();
+        $distributedQr = Voter::where(['is_checked' => '1', 'status' => 'Active', 'is_guiconsulta' => 'No', 'municipality_id' => auth()->user()->municipality_id])->count();
 
 
         // Update Percentage
@@ -100,6 +104,7 @@ class DashboardLivewire extends Component
                     'totalVoterCounts' => $totalVoterCounts,
 
                     'scannedVoter' => $scannedVoter,
+                    'distributedQr' => $distributedQr,
                     'updates' => $updates
                 ]
             );
