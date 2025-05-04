@@ -23,6 +23,7 @@ class ScanlogController extends Controller
             ->leftJoin('scanlogs', 'scanlogs.voter_id', '=', 'voters.id')
 
             ->where('voters.status', 'Active')
+            ->where('voters.is_guiconsulta', 'No')
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->where('barangays.municipality_id', auth()->user()->municipality_id)
 
