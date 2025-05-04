@@ -39,7 +39,7 @@
                 <tr class="bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                         <div class="ps-3">
-                            <div class="text-base font-semibold">Name: {{ $log->fname . ' ' . $log->mname . ' ' . $log->mname }}</div>
+                            <div class="text-base font-semibold">Name: {{ $log->fname . ' ' . $log->lname . ' ' . $log->mname }}</div>
                             <div class="font-normal text-gray-500">Barangay: {{ $log->barangay_name }}</div>
                         </div>
                     </td>
