@@ -137,27 +137,17 @@
                         </button>
                         @endcan
 
-                        @if($voter->checked_status == "")
-                        <button wire:click="checkVoter({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-blue-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                            Check
-                        </button>
-                        @else
-                        <button wire:click="unCheckVoter({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                            Uncheck
-                        </button>
-                        @endif
-
                         @can('delete', $voter)
                         <button wire:click="delete({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-red-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" wire:click="deleteVoter({{ $voter->id }})" wire:confirm="Are you sure you want to delete?">
                             Delete
                         </button>
                         @endcan
 
-                        <!-- <button wire:click="openDesignationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <button wire:click="openDesignationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                             Assign Designation
                         </button>
 
-                        <button wire:click="openOrganizationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <!-- <button wire:click="openOrganizationModal({{ $voter->id }})" class="inline-flex items-center text-gray-500 bg-white border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                             Assign Organization
                         </button> -->
                     </td>
@@ -206,17 +196,25 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Suffix</label>
+                            <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
                             <input type="date" wire:model="addDob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
                             @error('addDob') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
                             <label class="block text-sm font-medium text-gray-700">Gender</label>
-                            <select wire:model="addGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select wire:model="addGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
                                 <option value="">Choose Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                             @error('addGender') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Contact</label>
+                            <input type="text" wire:model="addContact" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter Suffix">
+                            @error('addContact') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Note</label>
+                            <input type="text" wire:model="addNote" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter Suffix">
+                            @error('addNote') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
@@ -310,12 +308,20 @@
                             @error('editDob') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
                             <label class="block text-sm font-medium text-gray-700">Gender</label>
-                            <select wire:model="editGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select wire:model="editGender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3">
                                 <option value="">Choose Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                             @error('editGender') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Contact</label>
+                            <input type="text" wire:model="editContact" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Enter Suffix">
+                            @error('editContact') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+                            <label class="block text-sm font-medium text-gray-700">Note</label>
+                            <input type="text" wire:model="editNote" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Suffix">
+                            @error('editNote') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <div>

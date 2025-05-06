@@ -49,6 +49,8 @@ class VoterLivewire extends Component
     public $addDob;
     public $addRemarks;
     public $addGuiconsulta;
+    public $addContact;
+    public $addNote;
 
 
     // Edit Modal Variable
@@ -63,6 +65,8 @@ class VoterLivewire extends Component
     public $editDob;
     public $editRemarks;
     public $editGuiconsulta;
+    public $editContact;
+    public $editNote;
 
     public $editStatus;
 
@@ -222,6 +226,8 @@ class VoterLivewire extends Component
                 'addPrecinct' => 'required|string|max:50',
                 'addRemarks' => 'required|string|max:500',
                 'addGuiconsulta' => 'nullable|in:Yes,No',
+                'addContact' => 'nullable',
+                'addNote' => 'nullable',
             ]);
 
             $validatedData['addGuiconsulta'] = $validatedData['addGuiconsulta'] ?? NULL;
@@ -241,7 +247,9 @@ class VoterLivewire extends Component
                     'remarks' => $validatedData['addRemarks'],
                     'status' => "Active",
                     'is_guiconsulta' => $validatedData['addGuiconsulta'],
-                    'is_checked' => 1
+                    'is_checked' => 1,
+                    'contact' => $validatedData['addContact'],
+                    'note' => $validatedData['addNote']
                 ]);
             } else {
                 session()->flash('message', 'You must be logged in to add a voter.');
@@ -260,6 +268,8 @@ class VoterLivewire extends Component
                 'editRemarks' => 'required|string|max:500',
                 'editStatus' => 'required|string|max:500',
                 'editGuiconsulta' => 'nullable|in:Yes,No',
+                'editContact' => 'nullable',
+                'editNote' => 'nullable',
             ]);
 
             $validatedData['editGuiconsulta'] = $validatedData['editGuiconsulta'] ?? NULL;
@@ -281,6 +291,8 @@ class VoterLivewire extends Component
                     'remarks' => $validatedData['editRemarks'],
                     'status' => $validatedData['editStatus'],
                     'is_guiconsulta' => $validatedData['editGuiconsulta'],
+                    'contact' => $validatedData['editContact'],
+                    'note' => $validatedData['editNote']
                 ]);
             } else {
                 session()->flash('message', 'You must be logged in to add a voter.');
@@ -315,6 +327,8 @@ class VoterLivewire extends Component
                 'addDob',
                 'addRemarks',
                 'addGuiconsulta',
+                'addContact',
+                'addNote',
 
                 // Edit
                 'editId',
@@ -329,6 +343,8 @@ class VoterLivewire extends Component
                 'editRemarks',
                 'editStatus',
                 'editGuiconsulta',
+                'editContact',
+                'editNote',
 
                 'isModalOpen',
 
@@ -364,6 +380,8 @@ class VoterLivewire extends Component
         $this->editRemarks  = $voter->remarks;
         $this->editStatus   = $voter->status;
         $this->editGuiconsulta   = $voter->is_guiconsulta;
+        $this->editContact   = $voter->contact;
+        $this->editNote   = $voter->note;
 
         $this->editSelectedBarangayId = $voter->barangay_id;
         $this->voterBarangayDetails = Barangay::where(
@@ -480,14 +498,20 @@ class VoterLivewire extends Component
 
     public function createVoterDesignation()
     {
-        VoterDesignation::create(
-            [
-                'voter_id' => $this->editId,
-                'designation_id' => $this->selecteddesignation
-            ]
-        );
-        session()->flash('message', 'Voter Designation created successfully');
-        $this->getDesignation();
+        $isExist = VoterDesignation::where('voter_id', $this->editId)->exists();
+        if (!$isExist) {
+            VoterDesignation::create(
+                [
+                    'voter_id' => $this->editId,
+                    'designation_id' => $this->selecteddesignation
+                ]
+            );
+            session()->flash('message', 'Voter Designation created successfully');
+            $this->getDesignation();
+        } else {
+            session()->flash('error', 'Voter has already designation');
+            $this->getDesignation();
+        }
     }
 
     public function deleteVoterDesignation(VoterDesignation $voterdesignation)
