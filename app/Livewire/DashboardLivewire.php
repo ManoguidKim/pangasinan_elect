@@ -74,8 +74,10 @@ class DashboardLivewire extends Component
             ->where('voters.status', 'Active')
             ->where('voters.is_guiconsulta', 'No')
             ->first();
-        $distributedQr = Voter::where(['is_checked' => '1', 'status' => 'Active', 'is_guiconsulta' => 'No', 'municipality_id' => auth()->user()->municipality_id])->count();
 
+        $distributedQr = Voter::where(['is_checked' => '1', 'status' => 'Active', 'is_guiconsulta' => 'No', 'municipality_id' => auth()->user()->municipality_id])
+            ->whereIn('remarks', ['Ally', 'Undecided'])
+            ->count();
 
         // Update Percentage
         $updates = Voter::selectRaw("
