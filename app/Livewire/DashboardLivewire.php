@@ -73,6 +73,7 @@ class DashboardLivewire extends Component
             ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->where('voters.status', 'Active')
             ->where('voters.is_guiconsulta', 'No')
+            ->whereIn('voters.remarks', ['Ally', 'Undecided'])
             ->first();
 
         $distributedQr = Voter::where(['is_checked' => '1', 'status' => 'Active', 'is_guiconsulta' => 'No', 'municipality_id' => auth()->user()->municipality_id])
