@@ -12,6 +12,11 @@ class ScanlogController extends Controller
         return view('scanlog.index');
     }
 
+    public function scanlogsReport()
+    {
+        return view('scanlog.report');
+    }
+
     public function scannedPerBarangay()
     {
         $scannedPerBarangay = Barangay::selectRaw("

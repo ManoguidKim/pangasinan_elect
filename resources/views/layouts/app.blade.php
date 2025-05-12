@@ -408,6 +408,10 @@
                             <a href="{{ route('system-admin-reports-withguiconsulta') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Total Guiconsulta Profiled and Not Per Barangay</a>
                         </li>
+                        <li>
+                            <a href="{{ route('system-admin-qr-scanlogs-report') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-sm">Scanlogs Report</a>
+                        </li>
                     </ul>
                 </li>
                 @endif

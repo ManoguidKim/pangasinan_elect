@@ -254,6 +254,7 @@ Route::middleware([
     // Scanlogs
     Route::get('system/admin/qr/scanlogs', [ScanlogController::class, 'index'])->name('system-admin-qr-scanlogs')->middleware(['isAdmin']);
     Route::get('system/admin/qr/scanlogs/graph', [ScanlogController::class, 'scannedPerBarangay'])->name('system-admin-qr-scanlogs-graph')->middleware(['isAdmin']);
+    Route::get('system/admin/qr/scanlogs/report', [ScanlogController::class, 'scanlogsReport'])->name('system-admin-qr-scanlogs-report')->middleware(['isAdmin']);
 
 
     // Map
