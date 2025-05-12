@@ -32,7 +32,7 @@ class ScanlogView extends Component
                 $query->where('voters.lname', 'like', '%' . $this->search . '%')
                     ->orWhere('voters.fname', 'like', '%' . $this->search . '%');
             })
-            ->orderBy('scanlogs.created_at')
+            ->orderBy('scanlogs.created_at', 'asc') // from oldest to newest
             ->limit(200)
             ->get();
 
