@@ -272,27 +272,27 @@ Route::middleware([
 
     // Organizations
     Route::get('system/admin/voter/organization/create', [OrganizationController::class, 'create'])->name('system-admin-voter-organization-create');
-    Route::post('system/admin/voter/organization/create', [OrganizationController::class, 'store'])->name('system-admin-voter-organization-create');
+    Route::post('system/admin/voter/organization/create', [OrganizationController::class, 'store'])->name('system-admin-voter-organization-create-store');
 
     Route::get('system/admin/voter/organization/edit/{organization}', [OrganizationController::class, 'edit'])->name('system-admin-voter-organization-edit');
-    Route::post('system/admin/voter/organization/edit/{organization}', [OrganizationController::class, 'update'])->name('system-admin-voter-organization-edit');
+    Route::post('system/admin/voter/organization/edit/{organization}', [OrganizationController::class, 'update'])->name('system-admin-voter-organization-update');
 
 
 
 
     // Designation
     Route::get('system/admin/voter/designation/create', [DesignationController::class, 'create'])->name('system-admin-voter-designation-create');
-    Route::post('system/admin/voter/designation/create', [DesignationController::class, 'store'])->name('system-admin-voter-designation-create');
+    Route::post('system/admin/voter/designation/create', [DesignationController::class, 'store'])->name('system-admin-voter-designation-store');
 
     Route::get('system/admin/voter/designation/edit/{designation}', [DesignationController::class, 'edit'])->name('system-admin-voter-designation-edit');
-    Route::post('system/admin/voter/designation/edit/{designation}', [DesignationController::class, 'update'])->name('system-admin-voter-designation-edit');
+    Route::post('system/admin/voter/designation/edit/{designation}', [DesignationController::class, 'update'])->name('system-admin-voter-designation-update');
 
 
 
 
     // User
     Route::get('system/admin/user/create', [UserController::class, 'create'])->name('system-admin-user-create');
-    Route::post('system/admin/user/create', [UserController::class, 'store'])->name('system-admin-user-create');
+    Route::post('system/admin/user/create', [UserController::class, 'store'])->name('system-admin-user-store');
 
 
 
