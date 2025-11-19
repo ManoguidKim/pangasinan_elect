@@ -232,6 +232,104 @@ class ReportController extends Controller
                     session()->flash('message', 'Invalid report type selected.');
                     break;
             }
+        } else {
+            switch ($type) {
+                case "Active Voter":
+                    // $pdf = new FPDF();
+                    // $pdf->AddPage();
+                    // $pdf->SetFont('Arial', 'B', 14);
+                    // if ($subtype == 'Yes' || $subtype == null) {
+                    //     $pdf->Cell(0, 8, 'Guiconsulta Profiled of Barangay ' . $currentBarangay, 0, 1);
+                    // } else {
+                    //     $pdf->Cell(0, 8, 'Guiconsulta Not Profiled of Barangay' . $currentBarangay, 0, 1);
+                    // }
+
+                    // $pdf->ln();
+                    // $pdf->SetFont('Arial', 'B', 8);
+                    // $pdf->Cell(10, 7, '#', 1, 0, 'L');
+                    // $pdf->Cell(90, 7, 'Name', 1, 0, 'L');
+                    // $pdf->Cell(60, 7, 'Precinct No.', 1, 0, 'L');
+                    // $pdf->Cell(30, 7, 'Tagging', 1, 1, 'L');
+
+                    // $i = 1;
+                    // foreach ($data as $voter) {
+                    //     $pdf->Cell(10, 7, $i++, 1, 0, 'L');
+                    //     $pdf->Cell(90, 7, $voter->lname . ', ' . $voter->fname . ' ' . $voter->mname, 1, 0, 'L');
+                    //     $pdf->Cell(60, 7, $voter->precinct_no, 1, 0, 'L');
+                    //     $pdf->Cell(30, 7, $voter->remarks, 1, 1, 'L');
+                    // }
+
+                    // $pdf->Output();
+                    // exit;
+
+                    break;
+                case "Active Voter of Organization":
+
+                    $pdf = new FPDF();
+                    $pdf->AddPage();
+                    $pdf->SetFont('Arial', 'B', 14);
+                    $pdf->Cell(0, 8, $type . ' of all Barangay', 0, 1);
+                    $pdf->SetFont('Arial', '', 8);
+                    $pdf->Cell(190, 5, 'An active voter is an individual who participates in elections by registering to vote and casting their ballot. This engagement can occur in various forms,', 0, 1, 'L');
+                    $pdf->Cell(190, 5, 'including voting in local, state, and national elections, as well as participating in primaries and referendums. Active voters often stay informed about', 0, 1, 'L');
+                    $pdf->Cell(190, 5, 'political issues, candidates, and policies, reflecting their commitment to civic duty and influence in the democratic process.', 0, 1, 'L');
+
+                    $pdf->ln();
+                    $pdf->Cell(10, 7, '#', 1, 0, 'L');
+                    $pdf->Cell(70, 7, 'Name', 1, 0, 'L');
+                    $pdf->Cell(25, 7, 'Precinct No.', 1, 0, 'L');
+                    $pdf->Cell(55, 7, 'Organization', 1, 0, 'L');
+                    $pdf->Cell(30, 7, 'Status', 1, 1, 'L');
+
+                    $i = 1;
+                    foreach ($data as $voter) {
+                        $pdf->Cell(10, 7, $i++, 1, 0, 'L');
+                        $pdf->Cell(70, 7, $voter->fname . ' ' . $voter->mname . ' ' . $voter->lname, 1, 0, 'L');
+                        $pdf->Cell(25, 7, $voter->precinct_no, 1, 0, 'L');
+                        $pdf->Cell(55, 7, $voter->organizations_names, 1, 0, 'L');
+                        $pdf->Cell(30, 7, $voter->status, 1, 1, 'L');
+                    }
+
+                    $pdf->Output();
+                    exit;
+
+                    break;
+                case "Active Voter of Barangay Staff":
+
+                    $pdf = new FPDF();
+                    $pdf->AddPage();
+                    $pdf->SetFont('Arial', 'B', 14);
+                    $pdf->Cell(0, 8, $subtype . ' of all Barangay', 0, 1);
+                    $pdf->SetFont('Arial', '', 8);
+                    $pdf->Cell(190, 5, 'An active voter is an individual who participates in elections by registering to vote and casting their ballot. This engagement can occur in various forms,', 0, 1, 'L');
+                    $pdf->Cell(190, 5, 'including voting in local, state, and national elections, as well as participating in primaries and referendums. Active voters often stay informed about', 0, 1, 'L');
+                    $pdf->Cell(190, 5, 'political issues, candidates, and policies, reflecting their commitment to civic duty and influence in the democratic process.', 0, 1, 'L');
+
+                    $pdf->ln();
+                    $pdf->Cell(10, 7, '#', 1, 0, 'L');
+                    $pdf->Cell(60, 7, 'Name', 1, 0, 'L');
+                    $pdf->Cell(35, 7, 'Barangay', 1, 0, 'L');
+                    $pdf->Cell(55, 7, 'Designation', 1, 0, 'L');
+                    $pdf->Cell(30, 7, 'Status', 1, 1, 'L');
+
+                    $i = 1;
+
+                    foreach ($data as $voter) {
+                        $pdf->Cell(10, 7, $i++, 1, 0, 'L');
+                        $pdf->Cell(60, 7, $voter->fname . ' ' . $voter->mname . ' ' . $voter->lname, 1, 0, 'L');
+                        $pdf->Cell(35, 7, $voter->barangay_name, 1, 0, 'L');
+                        $pdf->Cell(55, 7, $voter->designations_names, 1, 0, 'L');
+                        $pdf->Cell(30, 7, $voter->status, 1, 1, 'L');
+                    }
+
+                    $pdf->Output();
+                    exit;
+
+                    break;
+                default:
+                    session()->flash('message', 'Invalid report type selected.');
+                    break;
+            }
         }
     }
 
