@@ -78,21 +78,28 @@ class ReportController extends Controller
                 'voters.status',
                 'voters.remarks',
                 'voters.image_path',
-                DB::raw('GROUP_CONCAT(designations.name SEPARATOR ", ") as designations_names') // Using GROUP_CONCAT here
+                'barangays.name as barangay_name',
+                DB::raw('GROUP_CONCAT(designations.name SEPARATOR ", ") as designations_names')
             )
                 ->join('voter_designations', 'voter_designations.voter_id', '=', 'voters.id')
                 ->join('designations', 'designations.id', '=', 'voter_designations.designation_id')
+                ->join('barangays', 'barangays.id', '=', 'voters.barangay_id') // Add this join
                 ->where('voters.municipality_id', auth()->user()->municipality_id)
-                ->where('voters.barangay_id', $barangay)
                 ->where('voters.status', 'Active')
                 ->where('voters.is_checked', 1);
 
+            // Conditionally apply barangay filter
+            if ($barangay) {
+                $voters->where('voters.barangay_id', $barangay);
+            }
+
+            // Conditionally apply designation filter
             if ($sub_type) {
                 $voters->where('designations.id', $sub_type);
             }
 
             $voters = $voters->groupBy(
-                'voters.id', // Group by voter id to ensure we get one row per voter
+                'voters.id',
                 'voters.fname',
                 'voters.mname',
                 'voters.lname',
@@ -101,12 +108,12 @@ class ReportController extends Controller
                 'voters.dob',
                 'voters.status',
                 'voters.remarks',
-                'voters.image_path'
-            );
+                'voters.image_path',
+                'barangays.name'
+            )->get();
 
-            $voters = $voters->get();
-
-            $this->generateReport($voters, $type, $barangay);
+            $currentDesignation = DB::table('designations')->where('id', $sub_type)->first()->name;
+            $this->generateReport($voters, $type, $barangay, $currentDesignation);
         } else {
             $sub_type_array = explode('-', $sub_type);
 
@@ -194,7 +201,7 @@ class ReportController extends Controller
                     $pdf = new FPDF();
                     $pdf->AddPage();
                     $pdf->SetFont('Arial', 'B', 14);
-                    $pdf->Cell(0, 8, $type . ' of ' . $currentBarangay, 0, 1);
+                    $pdf->Cell(0, 8, $subtype . ' of ' . $currentBarangay, 0, 1);
                     $pdf->SetFont('Arial', '', 8);
                     $pdf->Cell(190, 5, 'An active voter is an individual who participates in elections by registering to vote and casting their ballot. This engagement can occur in various forms,', 0, 1, 'L');
                     $pdf->Cell(190, 5, 'including voting in local, state, and national elections, as well as participating in primaries and referendums. Active voters often stay informed about', 0, 1, 'L');
@@ -202,8 +209,8 @@ class ReportController extends Controller
 
                     $pdf->ln();
                     $pdf->Cell(10, 7, '#', 1, 0, 'L');
-                    $pdf->Cell(70, 7, 'Name', 1, 0, 'L');
-                    $pdf->Cell(25, 7, 'Precinct No.', 1, 0, 'L');
+                    $pdf->Cell(60, 7, 'Name', 1, 0, 'L');
+                    $pdf->Cell(35, 7, 'Barangay', 1, 0, 'L');
                     $pdf->Cell(55, 7, 'Designation', 1, 0, 'L');
                     $pdf->Cell(30, 7, 'Status', 1, 1, 'L');
 
@@ -211,8 +218,8 @@ class ReportController extends Controller
 
                     foreach ($data as $voter) {
                         $pdf->Cell(10, 7, $i++, 1, 0, 'L');
-                        $pdf->Cell(70, 7, $voter->fname . ' ' . $voter->mname . ' ' . $voter->lname, 1, 0, 'L');
-                        $pdf->Cell(25, 7, $voter->precinct_no, 1, 0, 'L');
+                        $pdf->Cell(60, 7, $voter->fname . ' ' . $voter->mname . ' ' . $voter->lname, 1, 0, 'L');
+                        $pdf->Cell(35, 7, $voter->barangay_name, 1, 0, 'L');
                         $pdf->Cell(55, 7, $voter->designations_names, 1, 0, 'L');
                         $pdf->Cell(30, 7, $voter->status, 1, 1, 'L');
                     }
