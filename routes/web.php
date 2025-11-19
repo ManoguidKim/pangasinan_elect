@@ -74,9 +74,9 @@ Route::middleware([
 
     Route::get('admin/manage/municipality', [MunicipalityController::class, 'index'])->name('admin-manage-municipality')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/municipality/create', [MunicipalityController::class, 'create'])->name('admin-manage-municipality-create')->middleware(['isSuperAdmin']);
-    Route::post('admin/manage/municipality/create', [MunicipalityController::class, 'store'])->name('admin-manage-municipality-create')->middleware(['isSuperAdmin']);
+    Route::post('admin/manage/municipality/create', [MunicipalityController::class, 'store'])->name('admin-manage-municipality-store')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/municipality/edit/{municipality}', [MunicipalityController::class, 'edit'])->name('admin-manage-municipality-edit')->middleware(['isSuperAdmin']);
-    Route::post('admin/manage/municipality/edit/{municipality}', [MunicipalityController::class, 'update'])->name('admin-manage-municipality-edit')->middleware(['isSuperAdmin']);
+    Route::post('admin/manage/municipality/edit/{municipality}', [MunicipalityController::class, 'update'])->name('admin-manage-municipality-update')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/municipality/destroy/{municipality}', [MunicipalityController::class, 'destroy'])->name('admin-manage-municipality-destroy')->middleware(['isSuperAdmin']);
 
     Route::get('/get-barangays', [MunicipalityController::class, 'getBarangays'])->name('get.barangays');
