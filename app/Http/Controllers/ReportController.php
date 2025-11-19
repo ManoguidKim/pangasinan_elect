@@ -98,6 +98,9 @@ class ReportController extends Controller
                 $voters->where('designations.id', $sub_type);
             }
 
+            $voters = $voters->orderBy('barangays.name')
+                ->orderBy('voters.lname');
+
             $voters = $voters->groupBy(
                 'voters.id',
                 'voters.fname',
@@ -316,7 +319,7 @@ class ReportController extends Controller
 
                     foreach ($data as $voter) {
                         $pdf->Cell(10, 7, $i++, 1, 0, 'L');
-                        $pdf->Cell(60, 7, $voter->fname . ' ' . $voter->mname . ' ' . $voter->lname, 1, 0, 'L');
+                        $pdf->Cell(60, 7, $voter->lname . ', ' . $voter->lname . ' ' . $voter->mname, 1, 0, 'L');
                         $pdf->Cell(35, 7, $voter->barangay_name, 1, 0, 'L');
                         $pdf->Cell(55, 7, $voter->designations_names, 1, 0, 'L');
                         $pdf->Cell(30, 7, $voter->status, 1, 1, 'L');
