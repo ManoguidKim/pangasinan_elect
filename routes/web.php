@@ -65,7 +65,7 @@ Route::middleware([
 
     Route::get('admin/manage/district', [DistrictController::class, 'index'])->name('admin-manage-district')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/district/create', [DistrictController::class, 'create'])->name('admin-manage-district-create')->middleware(['isSuperAdmin']);
-    Route::post('admin/manage/district/create', [DistrictController::class, 'store'])->name('admin-manage-district-create')->middleware(['isSuperAdmin']);
+    Route::post('admin/manage/district/create', [DistrictController::class, 'store'])->name('admin-manage-district-store')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/district/edit/{district}', [DistrictController::class, 'edit'])->name('admin-manage-district-edit')->middleware(['isSuperAdmin']);
     Route::post('admin/manage/district/edit/{district}', [DistrictController::class, 'update'])->name('admin-manage-district-edit')->middleware(['isSuperAdmin']);
     Route::get('admin/manage/district/destroy/{district}', [DistrictController::class, 'destroy'])->name('admin-manage-district-destroy')->middleware(['isSuperAdmin']);
