@@ -265,7 +265,7 @@ Route::middleware([
 
     // Change Password
     Route::get('system/admin/account/change-password', [UserController::class, 'changePasswordView'])->name('system-admin-account-change-password');
-    Route::post('system/admin/account/change-password', [UserController::class, 'changePassword'])->name('system-admin-account-change-password');
+    Route::post('system/admin/account/change-password', [UserController::class, 'changePassword'])->name('system-admin-account-change-password-change');
 
 
 
