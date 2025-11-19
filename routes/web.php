@@ -248,7 +248,7 @@ Route::middleware([
 
     // Download
     Route::get('system/admin/downloadformat', [DownloadController::class, 'index'])->name('system-admin-download-format')->middleware(['isAdminEncoder']);
-    Route::post('system/admin/downloadformat', [DownloadController::class, 'download'])->name('system-admin-download-format')->middleware(['isAdminEncoder']);
+    Route::post('system/admin/downloadformat', [DownloadController::class, 'download'])->name('system-admin-download-format-download')->middleware(['isAdminEncoder']);
 
 
     // Scanlogs
